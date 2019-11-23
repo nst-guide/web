@@ -37,6 +37,7 @@
     "change-case": "^3.1.0",
     "codeclimate-test-reporter": "^0.5.1",
     "core-js": "^2.6.5",
+    "deck.gl": "^7.3.6",
     "disqus-react": "^1.0.5",
     "gatsby": "^2.7.5",
     "gatsby-link": "^2.1.1",

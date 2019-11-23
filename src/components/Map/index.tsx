@@ -1,59 +1,55 @@
 import * as React from "react";
-import ReactMapGL, { NavigationControl } from "react-map-gl";
+import DeckGL from "@deck.gl/react";
+import { LineLayer } from "@deck.gl/layers";
+import {
+  _MapContext as MapContext,
+  StaticMap,
+  NavigationControl,
+} from "react-map-gl";
 
-const MAPBOX_TOKEN = process.env.MAPBOX_GL_API_KEY || "";
-const initialState = {
-  viewport: {
-    height: 400,
-    latitude: 37.776021,
-    longitude: -122.4171949,
-    width: 400,
-    zoom: 14,
-  },
+// Set your mapbox access token here
+const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_API_KEY;
+
+// Initial viewport settings
+const initialViewState = {
+  bearing: 0,
+  latitude: 37.7853,
+  longitude: -122.41669,
+  pitch: 0,
+  zoom: 13,
 };
-type State = typeof initialState;
-type Viewport = typeof initialState.viewport;
 
-export default class Map extends React.Component<{}, State> {
-  public state: State = initialState;
+const mapStyle = "mapbox://styles/mapbox/outdoors-v11";
 
-  public componentDidMount() {
-    window.addEventListener("resize", this.resize);
-    this.resize();
-  }
+// Data to be used by the LineLayer
+const data = [
+  {
+    sourcePosition: [-122.41669, 37.7853],
+    targetPosition: [-122.41669, 37.781],
+  },
+];
 
-  public componentWillUnmount() {
-    window.removeEventListener("resize", this.resize);
-  }
+class Map extends React.Component {
+  render() {
+    const layers = [new LineLayer({ id: "line-layer", data })];
 
-  public updateViewport = (viewport: Viewport) => {
-    this.setState((prevState) => ({
-      viewport: { ...prevState.viewport, ...viewport },
-    }));
-  }
-
-  public resize = () => {
-    this.setState((prevState) => ({
-      viewport: {
-        ...prevState.viewport,
-        height: window.innerHeight,
-        width: window.innerWidth,
-      },
-    }));
-  }
-
-  public render() {
-    const { viewport } = this.state;
     return (
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        onViewportChange={(v: Viewport) => this.updateViewport(v)}
+      <DeckGL
+        initialViewState={initialViewState}
+        controller={true}
+        layers={layers}
+        ContextProvider={MapContext.Provider}
       >
-        <div style={{ position: "absolute", right: 30, bottom: 30 }}>
-          <NavigationControl onViewportChange={this.updateViewport} />
+        <StaticMap
+          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+          mapStyle={mapStyle}
+        />
+        <div style={{ position: "absolute", right: 30, top: 120, zIndex: 1 }}>
+          <NavigationControl />
         </div>
-      </ReactMapGL>
+      </DeckGL>
     );
   }
 }
+
+export default Map;
