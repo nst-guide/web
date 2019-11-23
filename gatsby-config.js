@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'My website',
+    title: 'National Scenic Trails Guide',
     googleVerification: 'abcdefz',
     disqus: 'gatsby-typescript'
   },
