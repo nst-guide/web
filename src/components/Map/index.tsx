@@ -6,6 +6,7 @@ import {
   StaticMap,
   NavigationControl,
 } from "react-map-gl";
+import tileLayer from "./TileLayer";
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_API_KEY;
@@ -13,10 +14,10 @@ const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_API_KEY;
 // Initial viewport settings
 const initialViewState = {
   bearing: 0,
-  latitude: 37.7853,
-  longitude: -122.41669,
+  latitude: 37.5459,
+  longitude: -119.5332,
   pitch: 0,
-  zoom: 13,
+  zoom: 8,
 };
 
 const mapStyle = "mapbox://styles/mapbox/outdoors-v11";
@@ -31,7 +32,7 @@ const data = [
 
 class Map extends React.Component {
   render() {
-    const layers = [new LineLayer({ id: "line-layer", data })];
+    const layers = [new LineLayer({ id: "line-layer", data }), tileLayer];
 
     return (
       <DeckGL
