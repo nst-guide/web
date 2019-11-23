@@ -25,6 +25,7 @@
     "codeclimate": "codeclimate-test-reporter < coverage/lcov.info"
   },
   "dependencies": {
+    "@danmarshall/deckgl-typings": "^3.4.1",
     "@graphql-codegen/add": "^1.2.0",
     "@graphql-codegen/cli": "^1.2.0",
     "@graphql-codegen/typescript": "^1.2.0",
@@ -32,6 +33,7 @@
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "5.0.8",
+    "@types/react-map-gl": "^5.0.3",
     "@types/react-redux": "^7.0.9",
     "@types/semantic-ui": "^2.2.7",
     "babel-eslint": "^10.0.1",
