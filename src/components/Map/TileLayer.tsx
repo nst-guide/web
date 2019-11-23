@@ -4,7 +4,12 @@ import Protobuf from "pbf";
 import bboxClip from "@turf/bbox-clip";
 import { values, map, flatMap, range } from "lodash";
 
-const tileLayer = new TileLayer({
+const tileLayer = (attrs) => {
+  const args = { ...defaultArgs, ...attrs };
+  return new TileLayer(args);
+};
+
+const defaultArgs = {
   pickable: true,
   stroked: false,
 
@@ -53,6 +58,6 @@ const tileLayer = new TileLayer({
   onClick: ({ object }) => {
     console.log("hover object.properties", object && object.properties);
   },
-});
+};
 
 export default tileLayer;

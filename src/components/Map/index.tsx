@@ -32,7 +32,10 @@ const data = [
 
 class Map extends React.Component {
   render() {
-    const layers = [new LineLayer({ id: "line-layer", data }), tileLayer];
+    const layers = [
+      new LineLayer({ id: "line-layer", data }),
+      new tileLayer({}),
+    ];
 
     return (
       <DeckGL
