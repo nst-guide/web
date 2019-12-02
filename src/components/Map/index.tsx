@@ -11,8 +11,8 @@ import {
 // Initial viewport settings
 const initialViewState = {
   bearing: 0,
-  latitude: 37.5459,
-  longitude: -119.5332,
+  latitude: 37.8759,
+  longitude: -119.3629,
   pitch: 0,
   zoom: 8,
 };
