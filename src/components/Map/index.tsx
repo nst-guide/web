@@ -8,9 +8,6 @@ import {
 } from "react-map-gl";
 import tileLayer from "./TileLayer";
 
-// Set your mapbox access token here
-const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_API_KEY;
-
 // Initial viewport settings
 const initialViewState = {
   bearing: 0,
@@ -20,7 +17,8 @@ const initialViewState = {
   zoom: 8,
 };
 
-const mapStyle = "mapbox://styles/mapbox/outdoors-v11";
+const mapStyle =
+  "https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style.json";
 
 // Data to be used by the LineLayer
 const data = [
@@ -41,11 +39,10 @@ class Map extends React.Component {
       <DeckGL
         initialViewState={initialViewState}
         controller={true}
-        layers={layers}
+        // layers={layers}
         ContextProvider={MapContext.Provider}
       >
         <StaticMap
-          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
           mapStyle={mapStyle}
         />
         <div style={{ position: "absolute", right: 30, top: 120, zIndex: 1 }}>
