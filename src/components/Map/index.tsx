@@ -6,7 +6,7 @@ import {
   StaticMap,
   NavigationControl,
 } from "react-map-gl";
-import tileLayer from "./TileLayer";
+// import tileLayer from "./TileLayer";
 
 // Initial viewport settings
 const initialViewState = {
@@ -30,10 +30,10 @@ const data = [
 
 class Map extends React.Component {
   render() {
-    const layers = [
-      new LineLayer({ id: "line-layer", data }),
-      new tileLayer({}),
-    ];
+    // const layers = [
+    //   new LineLayer({ id: "line-layer", data }),
+    //   new tileLayer({}),
+    // ];
 
     return (
       <DeckGL
