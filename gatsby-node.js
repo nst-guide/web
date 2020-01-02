@@ -15,15 +15,25 @@ exports.onCreateNode = ({node, actions, getNode}) => {
   const {createNodeField} = actions;
   let slug;
   switch (node.internal.type) {
-    case `MarkdownRemark`:
+    case 'MarkdownRemark':
       const fileNode = getNode(node.parent);
       const [basePath, name] = fileNode.relativePath.split('/');
       slug = `/${basePath}/${name}/`;
       break;
   }
+
   if (slug) {
-    createNodeField({node, name: `slug`, value: slug});
+    createNodeField({node, name: 'slug', value: slug});
   }
+};
+
+// Fixes cannot find fs errors
+exports.onCreateWebpackConfig = ({actions}) => {
+  actions.setWebpackConfig({
+    node: {
+      fs: 'empty'
+    }
+  });
 };
 
 // Implement the Gatsby API `createPages`.
@@ -37,7 +47,7 @@ exports.createPages = ({graphql, actions}) => {
     const templates = ['blogPost', 'tagsPage', 'blogPage']
       .reduce((mem, templateName) => {
         return Object.assign({}, mem,
-        {[templateName]: path.resolve(`src/templates/${kebabCase(templateName)}.tsx`)});
+          {[templateName]: path.resolve(`src/templates/${kebabCase(templateName)}.tsx`)});
       }, {});
 
     graphql(
@@ -61,6 +71,7 @@ exports.createPages = ({graphql, actions}) => {
       if (result.errors) {
         return reject(result.errors);
       }
+
       const posts = result.data.posts.edges.map(p => p.node);
 
       // Create blog pages
