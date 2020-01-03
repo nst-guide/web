@@ -122,6 +122,7 @@ class Map extends React.Component {
               this.staticMap = ref && ref.getMap();
             }}
             mapStyle={mapStyle.value}
+            mapOptions={{hash: true}}
           />
           <div style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}>
             <NavigationControl />
