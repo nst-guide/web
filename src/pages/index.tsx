@@ -15,7 +15,7 @@ import Map from "../components/Map";
 
 const IndexPage = (props: LayoutProps) => (
   <div>
-    <Map />
+    <Map location={props.location} />
 
     {/* Master head */}
     <Segment vertical inverted textAlign="center" className="masthead">

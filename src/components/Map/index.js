@@ -9,7 +9,8 @@ import {
 import Image from '../Image';
 import Select from 'react-select';
 
-// Initial viewport settings
+// Default initial viewport settings
+// These are overwritten by the URL hash if it exists
 const initialViewState = {
   bearing: 0,
   latitude: 37.8759,
@@ -68,6 +69,34 @@ class Map extends React.Component {
     pointerY: null,
   };
 
+  _getInitialViewState(hash) {
+    if (!hash || hash.charAt(0) !== '#') {
+      return initialViewState;
+    }
+    // Split the hash into an array of numbers
+    const hashArray = hash
+      .substring(1)
+      .split('/')
+      .map(Number);
+    // Destructure the hash into an array with defaults
+    // Order of arguments:
+    // https://docs.mapbox.com/mapbox-gl-js/api/
+    const [
+      zoom = initialViewState.zoom,
+      latitude = initialViewState.latitude,
+      longitude = initialViewState.longitude,
+      bearing = initialViewState.bearing,
+      pitch = initialViewState.pitch,
+    ] = hashArray;
+    return {
+      bearing: bearing,
+      latitude: latitude,
+      longitude: longitude,
+      pitch: pitch,
+      zoom: zoom,
+    };
+  }
+
   _renderTooltip() {
     const { hoveredObject, pointerX, pointerY } = this.state || {};
     return (
@@ -94,6 +123,7 @@ class Map extends React.Component {
 
   render() {
     const { mapStyle } = this.state;
+    const { location } = this.props;
 
     const photosLayer = new GeoJsonLayer({
       id: 'photos',
@@ -141,7 +171,7 @@ class Map extends React.Component {
             this.deckGl = ref;
           }}
           controller
-          initialViewState={initialViewState}
+          initialViewState={this._getInitialViewState(location.hash)}
           layers={layers}
           ContextProvider={MapContext.Provider}
         >
