@@ -18,10 +18,27 @@ const initialViewState = {
   zoom: 8,
 };
 
+// From https://stackoverflow.com/a/27232658
+// Note that this still returns false on Firefox, but it's better than nothing
+function canUseWebP() {
+  var elem = document.createElement('canvas');
+
+  if (!!(elem.getContext && elem.getContext('2d'))) {
+    // was able or not to get WebP representation
+    return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+  }
+
+  // very old browser like IE 8, canvas not supported
+  return false;
+}
+
+const webp = canUseWebP();
+
 const mapStyles = [
   {
-    value:
-      'https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style.json',
+    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style${
+      webp ? '' : '-png'
+    }.json`,
     label: 'OSM Topo',
   },
   {
@@ -30,13 +47,15 @@ const mapStyles = [
     label: 'USFS Topo',
   },
   {
-    value:
-      'https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-hybrid.json',
+    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-hybrid${
+      webp ? '' : '-png'
+    }.json`,
     label: 'Aerial Hybrid',
   },
   {
-    value:
-      'https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-aerial.json',
+    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-aerial${
+      webp ? '' : '-png'
+    }.json`,
     label: 'Aerial',
   },
 ];
@@ -132,7 +151,7 @@ class Map extends React.Component {
               this.staticMap = ref && ref.getMap();
             }}
             mapStyle={mapStyle.value}
-            mapOptions={{hash: true}}
+            mapOptions={{ hash: true }}
           />
           <div style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}>
             <NavigationControl />
