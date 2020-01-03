@@ -52,16 +52,16 @@ class Map extends React.Component {
   }
 
   render() {
-    const geojsonLayer = new GeoJsonLayer({
+    const photosLayer = new GeoJsonLayer({
       id: 'photos',
       data: 'https://tiles.nst.guide/photos/index.geojson',
       // Styles
       filled: true,
       stroked: true,
-      pointRadiusMinPixels: 2,
+      pointRadiusMinPixels: 5,
       pointRadiusScale: 1,
-      getRadius: f => 100,
-      getFillColor: [200, 0, 80, 180],
+      getRadius: f => 15,
+      getFillColor: [18, 0, 244, 100],
       // Interactive props
       pickable: true,
       autoHighlight: true,
@@ -75,7 +75,20 @@ class Map extends React.Component {
         }),
     });
 
-    const layers = [geojsonLayer];
+    const trailLayer = new GeoJsonLayer({
+      id: 'trail',
+      data: 'https://tiles.nst.guide/pct/halfmile.geojson',
+      getLineWidth: 10,
+      filled: false,
+      stroked: false,
+      pickable: true,
+      autoHighlight: true,
+      lineWidthMinPixels: 2,
+      // Red if main trail; blue if alternate
+      getLineColor: f =>
+        f.properties.alternate ? [0, 38, 245, 200] : [235, 50, 35, 200],
+    });
+    const layers = [trailLayer, photosLayer];
 
     return (
       <div>
