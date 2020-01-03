@@ -7,6 +7,7 @@ import {
   NavigationControl,
 } from 'react-map-gl';
 import Image from '../Image';
+import Select from 'react-select';
 
 // Initial viewport settings
 const initialViewState = {
@@ -17,11 +18,22 @@ const initialViewState = {
   zoom: 8,
 };
 
-const mapStyle =
-  'https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style.json';
+const mapStyles = [
+  {
+    value:
+      'https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style.json',
+    label: 'OSM Topo',
+  },
+  {
+    value:
+      'https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-hybrid.json',
+    label: 'Aerial Hybrid',
+  },
+];
 
 class Map extends React.Component {
   state = {
+    mapStyle: mapStyles[0],
     hoveredObject: null,
     pointerX: null,
     pointerY: null,
@@ -52,6 +64,8 @@ class Map extends React.Component {
   }
 
   render() {
+    const { mapStyle } = this.state;
+
     const photosLayer = new GeoJsonLayer({
       id: 'photos',
       data: 'https://tiles.nst.guide/photos/index.geojson',
@@ -107,10 +121,27 @@ class Map extends React.Component {
             ref={ref => {
               this.staticMap = ref && ref.getMap();
             }}
-            mapStyle={mapStyle}
+            mapStyle={mapStyle.value}
           />
-          <div style={{ position: 'absolute', right: 30, top: 120, zIndex: 1 }}>
+          <div style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}>
             <NavigationControl />
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              width: 150,
+              left: 30,
+              top: 110,
+              zIndex: 1,
+            }}
+          >
+            <Select
+              value={mapStyle}
+              onChange={choice => {
+                this.setState({ mapStyle: choice });
+              }}
+              options={mapStyles}
+            />
           </div>
           {this._renderTooltip()}
         </DeckGL>
