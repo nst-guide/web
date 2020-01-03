@@ -26,8 +26,18 @@ const mapStyles = [
   },
   {
     value:
+      'https://raw.githubusercontent.com/nst-guide/fstopo/master/style.json',
+    label: 'USFS Topo',
+  },
+  {
+    value:
       'https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-hybrid.json',
     label: 'Aerial Hybrid',
+  },
+  {
+    value:
+      'https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-aerial.json',
+    label: 'Aerial',
   },
 ];
 
@@ -75,7 +85,7 @@ class Map extends React.Component {
       pointRadiusMinPixels: 5,
       pointRadiusScale: 1,
       getRadius: f => 15,
-      getFillColor: [18, 0, 244, 100],
+      getFillColor: [18, 0, 244, 200],
       // Interactive props
       pickable: true,
       autoHighlight: true,
