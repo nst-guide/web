@@ -6,7 +6,7 @@ import {
   StaticMap,
   NavigationControl,
 } from 'react-map-gl';
-import tileLayer from './TileLayer';
+import Image from '../Image';
 
 // Initial viewport settings
 const initialViewState = {
@@ -22,52 +22,86 @@ const mapStyle =
 
 class Map extends React.Component {
   state = {
-    photosData: null,
-    viewNationalPark: true,
-    hoveredFeatures: null,
+    hoveredObject: null,
+    pointerX: null,
+    pointerY: null,
   };
+
+  _renderTooltip() {
+    const { hoveredObject, pointerX, pointerY } = this.state || {};
+    return (
+      hoveredObject && (
+        <div
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            pointerEvents: 'none',
+            left: pointerX,
+            top: pointerY,
+            width: 400,
+            height: 400,
+          }}
+        >
+          <Image
+            alt="Gatsby in Space"
+            filename={`photos/${hoveredObject.id}.jpeg`}
+          />
+        </div>
+      )
+    );
+  }
 
   render() {
     const geojsonLayer = new GeoJsonLayer({
-      id: 'airports',
+      id: 'photos',
       data: 'https://tiles.nst.guide/photos/index.geojson',
       // Styles
       filled: true,
       stroked: true,
       pointRadiusMinPixels: 2,
       pointRadiusScale: 1,
-      getRadius: f => 10,
+      getRadius: f => 100,
       getFillColor: [200, 0, 80, 180],
       // Interactive props
       pickable: true,
       autoHighlight: true,
       onClick: () => console.log('clicked'),
+      // Update app state
+      onHover: info =>
+        this.setState({
+          hoveredObject: info.object,
+          pointerX: info.x,
+          pointerY: info.y,
+        }),
     });
 
     const layers = [geojsonLayer];
 
     return (
-      <DeckGL
-        key="deckgl"
-        ref={ref => {
-          this.deckGl = ref;
-        }}
-        controller
-        initialViewState={initialViewState}
-        layers={layers}
-        ContextProvider={MapContext.Provider}
-      >
-        <StaticMap
-          key="staticmap"
+      <div>
+        <DeckGL
+          key="deckgl"
           ref={ref => {
-            this.staticMap = ref && ref.getMap();
+            this.deckGl = ref;
           }}
-          mapStyle={mapStyle}
-        />
-        <div style={{ position: 'absolute', right: 30, top: 120, zIndex: 1 }}>
-          <NavigationControl />
-        </div>
-      </DeckGL>
+          controller
+          initialViewState={initialViewState}
+          layers={layers}
+          ContextProvider={MapContext.Provider}
+        >
+          <StaticMap
+            key="staticmap"
+            ref={ref => {
+              this.staticMap = ref && ref.getMap();
+            }}
+            mapStyle={mapStyle}
+          />
+          <div style={{ position: 'absolute', right: 30, top: 120, zIndex: 1 }}>
+            <NavigationControl />
+          </div>
+          {this._renderTooltip()}
+        </DeckGL>
+      </div>
     );
   }
 }
