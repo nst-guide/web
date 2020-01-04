@@ -39,7 +39,7 @@ const webp = canUseWebP();
 
 const mapStyles = [
   {
-    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty/gh-pages/style${
+    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style${
       webp ? '' : '-png'
     }.json`,
     label: 'OSM Topo',
