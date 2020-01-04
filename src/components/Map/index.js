@@ -125,6 +125,17 @@ class Map extends React.Component {
       )
     );
   }
+  
+  _onClick = event => {
+    // event.x and event.y hold the clicked x and y coordinates in pixels
+    // You can pass those coordinates to React Map GL's queryRenderedFeatures
+    // to query any desired layers rendered there.
+    // Make sure you create the ref on InteractiveMap or StaticMap
+    const features = this.map.queryRenderedFeatures([event.x, event.y], {
+      layers: ['nationalpark_fill'],
+    });
+    console.log(features);
+  };
 
   render() {
     const { mapStyle } = this.state;
@@ -178,6 +189,7 @@ class Map extends React.Component {
           initialViewState={this._getInitialViewState(location.hash)}
           layers={layers}
           ContextProvider={MapContext.Provider}
+          onClick={this._onClick}
         >
           <InteractiveMap
             ref={ref => {
@@ -197,7 +209,7 @@ class Map extends React.Component {
                 type="fill"
                 source-layer="nationalpark"
                 paint={{
-                  'fill-opacity': .6,
+                  'fill-opacity': 0.6,
                   'fill-color': 'rgb(115, 77, 38)',
                 }}
               />
