@@ -4,6 +4,9 @@ import { GeoJsonLayer } from '@deck.gl/layers';
 import InteractiveMap, {
   _MapContext as MapContext,
   NavigationControl,
+  ScaleControl,
+  Source,
+  Layer,
 } from 'react-map-gl';
 import Image from '../Image';
 import Select from 'react-select';
@@ -184,12 +187,27 @@ class Map extends React.Component {
             touchRotate={true}
             mapOptions={{ hash: true }}
           >
+            <Source
+              id="nationalpark"
+              type="vector"
+              url="https://tiles.nst.guide/nationalpark/tile.json"
+            >
+              <Layer
+                id="nationalpark_fill"
+                type="fill"
+                source-layer="nationalpark"
+                paint={{
+                  'fill-opacity': .6,
+                  'fill-color': 'rgb(115, 77, 38)',
+                }}
+              />
+            </Source>
             <div
               style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}
             >
-            <NavigationControl />
-          </div>
-          <div
+              <NavigationControl />
+            </div>
+            <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
             >
               <ScaleControl maxWidth={150} unit="imperial" />
@@ -197,23 +215,23 @@ class Map extends React.Component {
           </InteractiveMap>
         </DeckGL>
         <div
-            style={{
-              position: 'absolute',
-              width: 150,
-              left: 30,
-              top: 110,
-              zIndex: 1,
+          style={{
+            position: 'absolute',
+            width: 150,
+            left: 30,
+            top: 110,
+            zIndex: 1,
+          }}
+        >
+          <Select
+            value={mapStyle}
+            onChange={choice => {
+              this.setState({ mapStyle: choice });
             }}
-          >
-            <Select
-              value={mapStyle}
-              onChange={choice => {
-                this.setState({ mapStyle: choice });
-              }}
-              options={mapStyles}
-            />
-          </div>
-          {this._renderTooltip()}
+            options={mapStyles}
+          />
+        </div>
+        {this._renderTooltip()}
       </div>
     );
   }
