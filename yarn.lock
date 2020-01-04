@@ -2742,6 +2742,14 @@
     "@babel/runtime" "^7.0.0"
     gl-matrix "^3.0.0"
 
+"@math.gl/web-mercator@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@math.gl/web-mercator/-/web-mercator-3.1.3.tgz#3a6b2aeb6c68b331f26269c2fa1905cacc40e84b"
+  integrity sha512-aU+3upxkdA9yObA7EudfEKfN/QH4o5impyc7s/a34J2hZKPsihgREphxnKzl2RknXD/KoL7MnQv589LToAJGMQ==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    gl-matrix "^3.0.0"
+
 "@mikaelkristiansson/domready@^1.0.9":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@mikaelkristiansson/domready/-/domready-1.0.9.tgz#b2b85d8ac7bb2797e577050b61aeaf1b26fbd906"
@@ -19082,17 +19090,17 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-map-gl@^5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-5.1.3.tgz#c91a28f6dc670d4023e79a8cce8b2129974e6677"
-  integrity sha512-Fsj4+yxj/KA7phY5XTGBBi8Ac/PmZGhy1igEJX+IK+kvEbCDJDflhxJQ1NEHDA+9q5CpRpY+mNzb7qIQBUtFZw==
+react-map-gl@^5.1.7:
+  version "5.1.7"
+  resolved "https://registry.yarnpkg.com/react-map-gl/-/react-map-gl-5.1.7.tgz#63709eed3821c21f99d22bbc8350e9a97672be1a"
+  integrity sha512-wItAMG2vYcOn7lcapILlAxCawjDiZ5x5VCaMFihwWTbz9vD6ku9rbFVgoL5y/Od4RW7JNtjLzF7MAX5yGgW6Pg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     mapbox-gl "^1.0.0"
     mjolnir.js "^2.2.0"
     prop-types "^15.7.2"
     react-virtualized-auto-sizer "^1.0.2"
-    viewport-mercator-project "^6.2.1"
+    viewport-mercator-project "^6.2.3 || ^7.0.1"
 
 react-popper-tooltip@^2.8.3:
   version "2.10.0"
@@ -19197,7 +19205,7 @@ react-scripts@^3.0.1:
   optionalDependencies:
     fsevents "2.0.7"
 
-react-select@^3.0.0:
+react-select@^3.0.0, react-select@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.0.8.tgz#06ff764e29db843bcec439ef13e196865242e0c1"
   integrity sha512-v9LpOhckLlRmXN5A6/mGGEft4FMrfaBFTGAnuPHcUgVId7Je42kTq9y0Z+Ye5z8/j0XDT3zUqza8gaRaI1PZIg==
@@ -23531,13 +23539,12 @@ vfile@^3.0.0:
     unist-util-stringify-position "^1.0.0"
     vfile-message "^1.0.0"
 
-viewport-mercator-project@^6.2.1:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/viewport-mercator-project/-/viewport-mercator-project-6.2.2.tgz#f524819ad53fcc009b46136a59f73461bfcf1604"
-  integrity sha512-vs9pjDZxDwoiEqr+GgdpRAUogEQRoZ9D9COVLSr4+h/WdcUWhYN36SQr3n5jaTKrl/wlfdRj+TYU8wTk05grbg==
+"viewport-mercator-project@^6.2.3 || ^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/viewport-mercator-project/-/viewport-mercator-project-7.0.1.tgz#9d7248072f2cbb122f93b63d2b346a5763b8d79a"
+  integrity sha512-WKTuTL7o6WKdPQ+gmZhlXL7UpSdCdPUjxkDTBd/3AayBdAFSQGHxsqdbmPBvmoGwvo9KWo/30HTkNo/Z7ORJpw==
   dependencies:
-    "@babel/runtime" "^7.0.0"
-    gl-matrix "^3.0.0"
+    "@math.gl/web-mercator" "^3.1.3"
 
 vm-browserify@^1.0.1:
   version "1.1.0"
