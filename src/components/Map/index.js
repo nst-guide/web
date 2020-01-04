@@ -1,13 +1,15 @@
 import * as React from 'react';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
-import {
+import InteractiveMap, {
   _MapContext as MapContext,
-  StaticMap,
   NavigationControl,
 } from 'react-map-gl';
 import Image from '../Image';
 import Select from 'react-select';
+
+// You'll get obscure errors without including the Mapbox GL CSS
+import '../../css/mapbox-gl.css'
 
 // Default initial viewport settings
 // These are overwritten by the URL hash if it exists
@@ -166,27 +168,35 @@ class Map extends React.Component {
     return (
       <div>
         <DeckGL
-          key="deckgl"
           ref={ref => {
-            this.deckGl = ref;
+            this.deck = ref;
           }}
           controller
           initialViewState={this._getInitialViewState(location.hash)}
           layers={layers}
           ContextProvider={MapContext.Provider}
         >
-          <StaticMap
-            key="staticmap"
+          <InteractiveMap
             ref={ref => {
-              this.staticMap = ref && ref.getMap();
+              this.map = ref && ref.getMap();
             }}
             mapStyle={mapStyle.value}
+            touchRotate={true}
             mapOptions={{ hash: true }}
-          />
-          <div style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}>
+          >
+            <div
+              style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}
+            >
             <NavigationControl />
           </div>
           <div
+              style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
+            >
+              <ScaleControl maxWidth={150} unit="imperial" />
+            </div>
+          </InteractiveMap>
+        </DeckGL>
+        <div
             style={{
               position: 'absolute',
               width: 150,
@@ -204,7 +214,6 @@ class Map extends React.Component {
             />
           </div>
           {this._renderTooltip()}
-        </DeckGL>
       </div>
     );
   }
