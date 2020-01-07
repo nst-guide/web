@@ -27,7 +27,7 @@ const initialViewState = {
 // From https://stackoverflow.com/a/27232658
 // Note that this still returns false on Firefox, but it's better than nothing
 function canUseWebP() {
-  if (!document) {
+  if (typeof document === 'undefined') {
     return false;
   }
   var elem = document.createElement('canvas');
