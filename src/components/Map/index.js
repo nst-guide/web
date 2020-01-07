@@ -131,9 +131,8 @@ class Map extends React.Component {
     // You can pass those coordinates to React Map GL's queryRenderedFeatures
     // to query any desired layers rendered there.
     // Make sure you create the ref on InteractiveMap or StaticMap
-    const features = this.map.queryRenderedFeatures([event.x, event.y], {
-      layers: ['nationalpark_fill'],
-    });
+    // Without an options parameter, checks all layers rendered by React Map GL
+    const features = this.map.queryRenderedFeatures([event.x, event.y]);
     console.log(features);
   };
 
@@ -177,7 +176,18 @@ class Map extends React.Component {
       getLineColor: f =>
         f.properties.alternate ? [0, 38, 245, 200] : [235, 50, 35, 200],
     });
-    const layers = [trailLayer, photosLayer];
+
+    const airQualityLayer = new GeoJsonLayer({
+      id: 'aqi_pm25',
+      data: 'https://tiles.nst.guide/airnow/PM25.geojson',
+      // Styles
+      pickable: true,
+      opacity: 0.2,
+      getFillColor: f => f.properties.rgb.split(',').map(Number),
+      onClick: f => console.log(f),
+      onHover: () => console.log('hovered'),
+    });
+    const layers = [airQualityLayer, trailLayer, photosLayer];
 
     return (
       <div>
