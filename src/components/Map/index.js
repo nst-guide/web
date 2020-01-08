@@ -129,7 +129,7 @@ class Map extends React.Component {
       )
     );
   }
-  
+
   _onClick = event => {
     // event.x and event.y hold the clicked x and y coordinates in pixels
     // You can pass those coordinates to React Map GL's queryRenderedFeatures
