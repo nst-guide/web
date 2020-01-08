@@ -52,8 +52,9 @@ const mapStyles = [
     label: 'OSM Topo',
   },
   {
-    value:
-      'https://raw.githubusercontent.com/nst-guide/fstopo/master/style.json',
+    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-fstopo${
+      webp ? '' : '-png'
+    }.json`,
     label: 'USFS Topo',
   },
   {
