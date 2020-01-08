@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
+import { MapController } from 'deck.gl';
 import InteractiveMap, {
   _MapContext as MapContext,
   NavigationControl,
@@ -12,7 +13,7 @@ import Image from '../Image';
 import Select from 'react-select';
 
 // You'll get obscure errors without including the Mapbox GL CSS
-import '../../css/mapbox-gl.css'
+import '../../css/mapbox-gl.css';
 
 // Default initial viewport settings
 // These are overwritten by the URL hash if it exists
@@ -34,7 +35,7 @@ function canUseWebP() {
 
   if (!!(elem.getContext && elem.getContext('2d'))) {
     // was able or not to get WebP representation
-    return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
   }
 
   // very old browser like IE 8, canvas not supported
@@ -198,7 +199,10 @@ class Map extends React.Component {
           ref={ref => {
             this.deck = ref;
           }}
-          controller
+          controller={{
+            type: MapController,
+            touchRotate: true,
+          }}
           initialViewState={this._getInitialViewState(location.hash)}
           layers={layers}
           ContextProvider={MapContext.Provider}
@@ -209,7 +213,6 @@ class Map extends React.Component {
               this.map = ref && ref.getMap();
             }}
             mapStyle={mapStyle.value}
-            touchRotate={true}
             mapOptions={{ hash: true }}
           >
             <Source
