@@ -230,17 +230,19 @@ class Map extends React.Component {
                 }}
               />
             </Source>
-            <div
-              style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}
-            >
-              <NavigationControl />
-            </div>
+
+            {/* ScaleControl needs to be _inside_ InteractiveMap */}
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
             >
               <ScaleControl maxWidth={150} unit="imperial" />
             </div>
           </InteractiveMap>
+
+          {/* NavigationControl needs to be _outside_ InteractiveMap */}
+          <div style={{ position: 'absolute', right: 30, top: 110, zIndex: 1 }}>
+            <NavigationControl />
+          </div>
         </DeckGL>
         <div
           style={{
