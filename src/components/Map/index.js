@@ -11,6 +11,7 @@ import InteractiveMap, {
 } from 'react-map-gl';
 import Image from '../Image';
 import Select from 'react-select';
+import { canUseWebP } from './utils'
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -24,23 +25,6 @@ const initialViewState = {
   pitch: 0,
   zoom: 8,
 };
-
-// From https://stackoverflow.com/a/27232658
-// Note that this still returns false on Firefox, but it's better than nothing
-function canUseWebP() {
-  if (typeof document === 'undefined') {
-    return false;
-  }
-  var elem = document.createElement('canvas');
-
-  if (!!(elem.getContext && elem.getContext('2d'))) {
-    // was able or not to get WebP representation
-    return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  }
-
-  // very old browser like IE 8, canvas not supported
-  return false;
-}
 
 const webp = canUseWebP();
 
@@ -192,10 +176,11 @@ class Map extends React.Component {
       onClick: f => console.log(f),
       onHover: () => console.log('hovered'),
     });
-    const layers = [airQualityLayer, trailLayer, photosLayer];
+    // const layers = [airQualityLayer, trailLayer, photosLayer];
+    const layers = [airQualityLayer, photosLayer];
 
     return (
-      <div>
+      <div ref={ref => this.deckDiv = ref}>
         <DeckGL
           ref={ref => {
             this.deck = ref;
@@ -228,6 +213,62 @@ class Map extends React.Component {
                 paint={{
                   'fill-opacity': 0.6,
                   'fill-color': 'rgb(115, 77, 38)',
+                }}
+              />
+            </Source>
+
+            <Source
+              id="hmline"
+              type="vector"
+              url="https://tiles.nst.guide/pct/hmline/tile.json"
+              maxzoom={11}
+            >
+              <Layer
+                id="hmline_line_pct"
+                source-layer="hmline"
+                type="line"
+                filter={['==', 'alternate', false]}
+                paint={{
+                  'line-color': 'rgb(235, 50, 35)',
+                }}
+              />
+              <Layer
+                id="hmline_line_al"
+                source-layer="hmline"
+                type="line"
+                filter={['==', 'alternate', true]}
+                paint={{
+                  'line-color': 'rgb(0, 38, 245)',
+                }}
+              />
+              <Layer
+                id="hmline_label"
+                source-layer="hmline"
+                type="symbol"
+                layout={{
+                  'symbol-placement': 'line',
+                  'text-anchor': 'center',
+                  'text-field': '{name}',
+                  'text-font': ['Open Sans Regular'],
+                  'text-offset': [1, 0],
+                  'text-size': {
+                    base: 1,
+                    stops: [
+                      [5, 10],
+                      [14, 13],
+                    ],
+                  },
+                  'symbol-spacing': 350,
+                  'text-max-angle': 50,
+                  'text-letter-spacing': 0,
+                  'text-max-width': 15,
+                  'text-allow-overlap': true,
+                }}
+                paint={{
+                  'text-color': 'rgba(30, 30, 30, 1)',
+                  'text-halo-blur': 0.5,
+                  'text-halo-width': 1.5,
+                  'text-halo-color': 'rgba(255, 255, 255, 1)',
                 }}
               />
             </Source>
