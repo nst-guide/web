@@ -11,7 +11,8 @@ import InteractiveMap, {
 } from 'react-map-gl';
 import Image from '../Image';
 import Select from 'react-select';
-import { canUseWebP } from './utils'
+import { canUseWebP } from './utils';
+import { navigate } from 'gatsby';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -63,7 +64,10 @@ class Map extends React.Component {
     pointerY: null,
   };
 
-  _getInitialViewState(hash) {
+  // Parse hash from url
+  // By default, if no hash or hash is invalid, returns initialViewState
+  _getInitialViewState(location) {
+    const hash = location.hash;
     if (!hash || hash.charAt(0) !== '#') {
       return initialViewState;
     }
@@ -72,6 +76,16 @@ class Map extends React.Component {
       .substring(1)
       .split('/')
       .map(Number);
+
+    // If hash is not all Numbers, navigate to current page without hash
+    // Note that it's not enough to just return initialViewState because the
+    // Mapbox GL JS `hash` option is enabled. If you just return
+    // initialViewState, MapboxGL JS will get confused.
+    if (hashArray.some(Number.isNaN)) {
+      navigate(location.pathname);
+      return;
+    }
+
     // Destructure the hash into an array with defaults
     // Order of arguments:
     // https://docs.mapbox.com/mapbox-gl-js/api/
@@ -180,7 +194,7 @@ class Map extends React.Component {
     const layers = [airQualityLayer, photosLayer];
 
     return (
-      <div ref={ref => this.deckDiv = ref}>
+      <div ref={ref => (this.deckDiv = ref)}>
         <DeckGL
           ref={ref => {
             this.deck = ref;
@@ -189,7 +203,7 @@ class Map extends React.Component {
             type: MapController,
             touchRotate: true,
           }}
-          initialViewState={this._getInitialViewState(location.hash)}
+          initialViewState={this._getInitialViewState(location)}
           layers={layers}
           ContextProvider={MapContext.Provider}
           onClick={this._onClick}
