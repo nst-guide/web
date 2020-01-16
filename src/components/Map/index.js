@@ -13,6 +13,7 @@ import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP } from './utils';
 import { navigate } from 'gatsby';
+import { Checkbox } from 'semantic-ui-react';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -62,6 +63,9 @@ class Map extends React.Component {
     hoveredObject: null,
     pointerX: null,
     pointerY: null,
+    layerPhotosVisible: true,
+    layerAirQualityVisible: true,
+    layerNationalParksVisible: true,
   };
 
   // Parse hash from url
@@ -164,6 +168,8 @@ class Map extends React.Component {
           pointerX: info.x,
           pointerY: info.y,
         }),
+      // Visiblility based on state
+      visible: this.state.layerPhotosVisible,
     });
 
     const trailLayer = new GeoJsonLayer({
@@ -189,6 +195,8 @@ class Map extends React.Component {
       getFillColor: f => f.properties.rgb.split(',').map(Number),
       onClick: f => console.log(f),
       onHover: () => console.log('hovered'),
+      // Visiblility based on state
+      visible: this.state.layerAirQualityVisible,
     });
     // const layers = [airQualityLayer, trailLayer, photosLayer];
     const layers = [airQualityLayer, photosLayer];
@@ -227,6 +235,11 @@ class Map extends React.Component {
                 paint={{
                   'fill-opacity': 0.6,
                   'fill-color': 'rgb(115, 77, 38)',
+                }}
+                layout={{
+                  visibility: this.state.layerNationalParksVisible
+                    ? 'visible'
+                    : 'none',
                 }}
               />
             </Source>
@@ -306,7 +319,7 @@ class Map extends React.Component {
             width: 150,
             left: 30,
             top: 110,
-            zIndex: 1,
+            zIndex: 2,
           }}
         >
           <Select
@@ -317,6 +330,54 @@ class Map extends React.Component {
             options={mapStyles}
           />
         </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            width: 200,
+            left: 30,
+            top: 160,
+            zIndex: 1,
+            padding: 10,
+            backgroundColor: '#fff',
+          }}
+        >
+          <h2>Data Overlays</h2>
+          <div>
+            <Checkbox
+              label="Photos"
+              onChange={() =>
+                this.setState(prevState => ({
+                  layerPhotosVisible: !prevState.layerPhotosVisible,
+                }))
+              }
+              checked={this.state.layerPhotosVisible}
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="Air Quality"
+              onChange={() =>
+                this.setState(prevState => ({
+                  layerAirQualityVisible: !prevState.layerAirQualityVisible,
+                }))
+              }
+              checked={this.state.layerAirQualityVisible}
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="National Parks"
+              onChange={() =>
+                this.setState(prevState => ({
+                  layerNationalParksVisible: !prevState.layerNationalParksVisible,
+                }))
+              }
+              checked={this.state.layerNationalParksVisible}
+            />
+          </div>
+        </div>
+
         {this._renderTooltip()}
       </div>
     );
