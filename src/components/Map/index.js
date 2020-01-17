@@ -13,7 +13,7 @@ import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP } from './utils';
 import { navigate } from 'gatsby';
-import { Checkbox, Header } from 'semantic-ui-react';
+import { Checkbox, Header, Form } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
 // You'll get obscure errors without including the Mapbox GL CSS
@@ -67,8 +67,11 @@ class Map extends React.Component {
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
     layerAirQualityVisible: true,
+    layerAirQualityOpacity: 0.3,
     layerNationalParksVisible: true,
+    layerNationalParksOpacity: 0.3,
     layerSlopeAngleVisible: true,
+    layerSlopeAngleOpacity: 0.3,
   };
 
   // Parse hash from url
@@ -221,7 +224,7 @@ class Map extends React.Component {
       data: 'https://tiles.nst.guide/airnow/PM25.geojson',
       // Styles
       pickable: true,
-      opacity: 0.2,
+      opacity: this.state.layerAirQualityOpacity,
       getFillColor: f => f.properties.rgb.split(',').map(Number),
       onClick: f => console.log(f),
       onHover: () => console.log('hovered'),
@@ -263,7 +266,7 @@ class Map extends React.Component {
                 type="fill"
                 source-layer="nationalpark"
                 paint={{
-                  'fill-opacity': 0.6,
+                  'fill-opacity': this.state.layerNationalParksOpacity,
                   'fill-color': 'rgb(115, 77, 38)',
                 }}
                 layout={{
@@ -339,7 +342,7 @@ class Map extends React.Component {
                 id="slope-angle-raster"
                 type="raster"
                 paint={{
-                  'raster-opacity': 0.3,
+                  'raster-opacity': this.state.layerSlopeAngleOpacity,
                 }}
                 layout={{
                   visibility: this.state.layerSlopeAngleVisible
@@ -391,7 +394,7 @@ class Map extends React.Component {
             backgroundColor: '#fff',
           }}
         >
-          <Header size='medium'>Data Overlays</Header>
+          <Header size="medium">Data Overlays</Header>
           <div>
             <Checkbox
               label="Photos"
@@ -424,6 +427,18 @@ class Map extends React.Component {
               }
               checked={this.state.layerAirQualityVisible}
             />
+            <Form.Input
+              label={`Opacity: ${this.state.layerAirQualityOpacity}`}
+              min={0}
+              max={1}
+              name="layerAirQualityOpacity"
+              onChange={(e, { name, value }) => {
+                this.setState({ [name]: Number(value) });
+              }}
+              step={0.05}
+              type="range"
+              value={this.state.layerAirQualityOpacity}
+            />
           </div>
           <div>
             <Checkbox
@@ -435,6 +450,18 @@ class Map extends React.Component {
               }
               checked={this.state.layerNationalParksVisible}
             />
+            <Form.Input
+              label={`Opacity: ${this.state.layerNationalParksOpacity}`}
+              min={0}
+              max={1}
+              name="layerNationalParksOpacity"
+              onChange={(e, { name, value }) => {
+                this.setState({ [name]: Number(value) });
+              }}
+              step={0.05}
+              type="range"
+              value={this.state.layerNationalParksOpacity}
+            />
           </div>
           <div>
             <Checkbox
@@ -445,6 +472,18 @@ class Map extends React.Component {
                 }))
               }
               checked={this.state.layerSlopeAngleVisible}
+            />
+            <Form.Input
+              label={`Opacity: ${this.state.layerSlopeAngleOpacity}`}
+              min={0}
+              max={1}
+              name="layerSlopeAngleOpacity"
+              onChange={(e, { name, value }) => {
+                this.setState({ [name]: Number(value) });
+              }}
+              step={0.05}
+              type="range"
+              value={this.state.layerSlopeAngleOpacity}
             />
           </div>
         </div>
