@@ -297,6 +297,26 @@ class Map extends React.Component {
             </Source>
 
             <Source
+              id="slope-angle"
+              type="raster"
+              url="https://tiles.nst.guide/slope-angle-png/tile.json"
+            >
+              <Layer
+                id="slope-angle-raster"
+                beforeId={this._beforeId('raster')}
+                type="raster"
+                paint={{
+                  'raster-opacity': this.state.layerSlopeAngleOpacity,
+                }}
+                layout={{
+                  visibility: this.state.layerSlopeAngleVisible
+                    ? 'visible'
+                    : 'none',
+                }}
+              />
+            </Source>
+
+            <Source
               id="hmline"
               type="vector"
               url="https://tiles.nst.guide/pct/hmline/tile.json"
@@ -351,27 +371,6 @@ class Map extends React.Component {
                 }}
               />
             </Source>
-
-            <Source
-              id="slope-angle"
-              type="raster"
-              url="https://tiles.nst.guide/slope-angle-png/tile.json"
-            >
-              <Layer
-                id="slope-angle-raster"
-                beforeId={this._beforeId()}
-                type="raster"
-                paint={{
-                  'raster-opacity': this.state.layerSlopeAngleOpacity,
-                }}
-                layout={{
-                  visibility: this.state.layerSlopeAngleVisible
-                    ? 'visible'
-                    : 'none',
-                }}
-              />
-            </Source>
-
             {/* ScaleControl needs to be _inside_ InteractiveMap */}
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
