@@ -13,8 +13,9 @@ import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import { Checkbox, Header, Form } from 'semantic-ui-react';
+import { Checkbox, Header } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
+import { OpacitySlider } from './OpacitySlider';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -169,6 +170,10 @@ class Map extends React.Component {
     console.log(features);
   };
 
+  _onChangeOpacity = (e, { name, value }) => {
+    this.setState({ [name]: Number(value) });
+  };
+
   render() {
     const { mapStyle } = this.state;
     const { location } = this.props;
@@ -265,7 +270,7 @@ class Map extends React.Component {
                 id="nationalpark_fill"
                 beforeId={beforeId({
                   layerType: 'raster',
-                  mapStyle: this.state.mapStyle.value,
+                  mapStyle: mapStyle.value,
                 })}
                 type="fill"
                 source-layer="nationalpark"
@@ -290,7 +295,7 @@ class Map extends React.Component {
                 id="slope-angle-raster"
                 beforeId={beforeId({
                   layerType: 'raster',
-                  mapStyle: this.state.mapStyle.value,
+                  mapStyle: mapStyle.value,
                 })}
                 type="raster"
                 paint={{
@@ -314,7 +319,7 @@ class Map extends React.Component {
                 id="hmline_line_pct"
                 beforeId={beforeId({
                   layerType: 'vector',
-                  mapStyle: this.state.mapStyle.value,
+                  mapStyle: mapStyle.value,
                 })}
                 source-layer="hmline"
                 type="line"
@@ -327,7 +332,7 @@ class Map extends React.Component {
                 id="hmline_line_al"
                 beforeId={beforeId({
                   layerType: 'vector',
-                  mapStyle: this.state.mapStyle.value,
+                  mapStyle: mapStyle.value,
                 })}
                 source-layer="hmline"
                 type="line"
@@ -442,17 +447,10 @@ class Map extends React.Component {
               }
               checked={this.state.layerAirQualityVisible}
             />
-            <Form.Input
-              label={`Opacity: ${this.state.layerAirQualityOpacity}`}
-              min={0}
-              max={1}
+            <OpacitySlider
               name="layerAirQualityOpacity"
-              onChange={(e, { name, value }) => {
-                this.setState({ [name]: Number(value) });
-              }}
-              step={0.05}
-              type="range"
               value={this.state.layerAirQualityOpacity}
+              onChange={this._onChangeOpacity}
             />
           </div>
           <div>
@@ -465,17 +463,10 @@ class Map extends React.Component {
               }
               checked={this.state.layerNationalParksVisible}
             />
-            <Form.Input
-              label={`Opacity: ${this.state.layerNationalParksOpacity}`}
-              min={0}
-              max={1}
+            <OpacitySlider
               name="layerNationalParksOpacity"
-              onChange={(e, { name, value }) => {
-                this.setState({ [name]: Number(value) });
-              }}
-              step={0.05}
-              type="range"
               value={this.state.layerNationalParksOpacity}
+              onChange={this._onChangeOpacity}
             />
           </div>
           <div>
@@ -488,17 +479,10 @@ class Map extends React.Component {
               }
               checked={this.state.layerSlopeAngleVisible}
             />
-            <Form.Input
-              label={`Opacity: ${this.state.layerSlopeAngleOpacity}`}
-              min={0}
-              max={1}
+            <OpacitySlider
               name="layerSlopeAngleOpacity"
-              onChange={(e, { name, value }) => {
-                this.setState({ [name]: Number(value) });
-              }}
-              step={0.05}
-              type="range"
               value={this.state.layerSlopeAngleOpacity}
+              onChange={this._onChangeOpacity}
             />
           </div>
         </div>
