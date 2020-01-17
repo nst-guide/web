@@ -67,7 +67,7 @@ class Map extends React.Component {
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
     layerAirQualityVisible: true,
-    layerAirQualityOpacity: 0.3,
+    layerAirQualityOpacity: 0.1,
     layerNationalParksVisible: true,
     layerNationalParksOpacity: 0.3,
     layerSlopeAngleVisible: true,
