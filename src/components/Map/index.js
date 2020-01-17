@@ -169,6 +169,24 @@ class Map extends React.Component {
     console.log(features);
   };
 
+  // Determine where in the layer hierarchy new layers should be placed
+  _beforeId = () => {
+    // Current mapStyle. Note this is a "select" object, so mapStyle is not a string
+    const { mapStyle } = this.state;
+    // name of style, e.g. 'style.json' or 'style-hybrid.json' or 'style-aerial-png.json'
+    const name = mapStyle.value.split('/').slice(-1)[0];
+    // If layer is to be placed on top, return null
+    const placeOnTop = null;
+    // Otherwise, place layer in the middle of the layer hierarchy
+    // For now, 'building' is hardcoded as the layer below which to place the layer
+    // This puts the layer below labels and POIs but above most everything else
+    const placeInMiddle = 'building'
+    if (name.startsWith('style-aerial') || name.startsWith('style-fstopo')) {
+      return placeOnTop;
+    }
+    return placeInMiddle;
+  }
+
   render() {
     const { mapStyle } = this.state;
     const { location } = this.props;
@@ -263,6 +281,7 @@ class Map extends React.Component {
             >
               <Layer
                 id="nationalpark_fill"
+                beforeId={this._beforeId()}
                 type="fill"
                 source-layer="nationalpark"
                 paint={{
@@ -340,6 +359,7 @@ class Map extends React.Component {
             >
               <Layer
                 id="slope-angle-raster"
+                beforeId={this._beforeId()}
                 type="raster"
                 paint={{
                   'raster-opacity': this.state.layerSlopeAngleOpacity,
