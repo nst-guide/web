@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "gatsby develop",
-    "deploy": "npm run -n \"-r dotenv/config\" && npm run build && gatsby-plugin-s3 deploy",
+    "deploy": "npm run -n \"-r dotenv/config\" && npm run build && gatsby-plugin-s3 deploy -y",
     "develop": "gatsby develop",
     "build": "gatsby build",
     "lint": "npm run lint:ts && npm run lint:md && npm run lint:js && npm run lint:css",
