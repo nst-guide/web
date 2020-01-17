@@ -126,13 +126,21 @@ class Map extends React.Component {
                 : null,
             right:
               pointerX > window.innerWidth / 2
-                ? Math.min(window.innerWidth * 0.3, window.innerWidth - pointerX)
+                ? Math.min(
+                    window.innerWidth * 0.3,
+                    window.innerWidth - pointerX,
+                  )
                 : null,
-            top: pointerY <= window.innerHeight / 2
+            top:
+              pointerY <= window.innerHeight / 2
                 ? Math.min(window.innerHeight * 0.5, pointerY)
                 : null,
-            bottom: pointerY > window.innerHeight / 2
-                ? Math.min(window.innerHeight * 0.5, window.innerHeight - pointerY)
+            bottom:
+              pointerY > window.innerHeight / 2
+                ? Math.min(
+                    window.innerHeight * 0.5,
+                    window.innerHeight - pointerY,
+                  )
                 : null,
             width: '70%',
             maxWidth: '600px',
@@ -219,7 +227,7 @@ class Map extends React.Component {
       // Visiblility based on state
       visible: this.state.layerAirQualityVisible,
     });
-    // const layers = [airQualityLayer, trailLayer, photosLayer];
+
     const layers = [airQualityLayer, photosLayer];
 
     return (
