@@ -170,7 +170,7 @@ class Map extends React.Component {
   };
 
   // Determine where in the layer hierarchy new layers should be placed
-  _beforeId = () => {
+  _beforeId = (layerType) => {
     // Current mapStyle. Note this is a "select" object, so mapStyle is not a string
     const { mapStyle } = this.state;
     // name of style, e.g. 'style.json' or 'style-hybrid.json' or 'style-aerial-png.json'
@@ -180,7 +180,15 @@ class Map extends React.Component {
     // Otherwise, place layer in the middle of the layer hierarchy
     // For now, 'building' is hardcoded as the layer below which to place the layer
     // This puts the layer below labels and POIs but above most everything else
-    const placeInMiddle = 'building'
+    // In the future, I can change where raster and vector layers get put
+    let placeInMiddle;
+    if (layerType === 'raster') {
+      placeInMiddle = 'building';
+    } else if (layerType === 'vector') {
+      placeInMiddle = 'building';
+    } else {
+      placeInMiddle = 'building';
+    }
     if (name.startsWith('style-aerial') || name.startsWith('style-fstopo')) {
       return placeOnTop;
     }
@@ -281,7 +289,7 @@ class Map extends React.Component {
             >
               <Layer
                 id="nationalpark_fill"
-                beforeId={this._beforeId()}
+                beforeId={this._beforeId('raster')}
                 type="fill"
                 source-layer="nationalpark"
                 paint={{
@@ -324,6 +332,7 @@ class Map extends React.Component {
             >
               <Layer
                 id="hmline_line_pct"
+                beforeId={this._beforeId('vector')}
                 source-layer="hmline"
                 type="line"
                 filter={['==', 'alternate', false]}
@@ -333,6 +342,7 @@ class Map extends React.Component {
               />
               <Layer
                 id="hmline_line_al"
+                beforeId={this._beforeId('vector')}
                 source-layer="hmline"
                 type="line"
                 filter={['==', 'alternate', true]}
