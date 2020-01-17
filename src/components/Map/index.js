@@ -13,7 +13,7 @@ import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import { Checkbox, Header } from 'semantic-ui-react';
+import { Accordion, Checkbox, Container, Icon, Menu } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 
@@ -65,10 +65,15 @@ class Map extends React.Component {
     hoveredObject: null,
     pointerX: null,
     pointerY: null,
+    dataOverlaysExpanded: false,
+    dataOverlaysPhotosExpanded: false,
+    dataOverlaysAirQualityExpanded: false,
+    dataOverlaysNationalParksExpanded: false,
+    dataOverlaysSlopeAngleExpanded: false,
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
     layerAirQualityVisible: true,
-    layerAirQualityOpacity: 0.1,
+    layerAirQualityOpacity: 0.05,
     layerNationalParksVisible: true,
     layerNationalParksOpacity: 0.3,
     layerSlopeAngleVisible: true,
@@ -403,89 +408,160 @@ class Map extends React.Component {
           />
         </div>
 
-        <div
+        <Container
           style={{
             position: 'absolute',
-            width: 180,
+            width: 240,
             left: 30,
             top: 160,
             zIndex: 1,
-            padding: 10,
             backgroundColor: '#fff',
           }}
         >
-          <Header size="medium">Data Overlays</Header>
-          <div>
-            <Checkbox
-              label="Photos"
-              onChange={() =>
+          <Accordion as={Menu} vertical fluid styled>
+            <Accordion.Title
+              active={this.state.dataOverlaysExpanded}
+              index={0}
+              onClick={() =>
                 this.setState(prevState => ({
-                  layerPhotosVisible: !prevState.layerPhotosVisible,
+                  dataOverlaysExpanded: !prevState.dataOverlaysExpanded,
                 }))
               }
-              checked={this.state.layerPhotosVisible}
-            />
-          </div>
-          <div>
-            <Checkbox
-              label="Show all photos"
-              onChange={() =>
-                this.setState(prevState => ({
-                  layerPhotosShowAll: !prevState.layerPhotosShowAll,
-                }))
-              }
-              checked={this.state.layerPhotosShowAll}
-            />
-          </div>
-          <div>
-            <Checkbox
-              label="Current Air Quality"
-              onChange={() =>
-                this.setState(prevState => ({
-                  layerAirQualityVisible: !prevState.layerAirQualityVisible,
-                }))
-              }
-              checked={this.state.layerAirQualityVisible}
-            />
-            <OpacitySlider
-              name="layerAirQualityOpacity"
-              value={this.state.layerAirQualityOpacity}
-              onChange={this._onChangeOpacity}
-            />
-          </div>
-          <div>
-            <Checkbox
-              label="National Parks"
-              onChange={() =>
-                this.setState(prevState => ({
-                  layerNationalParksVisible: !prevState.layerNationalParksVisible,
-                }))
-              }
-              checked={this.state.layerNationalParksVisible}
-            />
-            <OpacitySlider
-              name="layerNationalParksOpacity"
-              value={this.state.layerNationalParksOpacity}
-              onChange={this._onChangeOpacity}
-            />
-          </div>
-          <div>
-            <Checkbox
-              label="Slope Angle Shading"
-              onChange={() =>
-                this.setState(prevState => ({
-                  layerSlopeAngleVisible: !prevState.layerSlopeAngleVisible,
-                }))
-              }
-              checked={this.state.layerSlopeAngleVisible}
-            />
-            <OpacitySlider
-              name="layerSlopeAngleOpacity"
-              value={this.state.layerSlopeAngleOpacity}
-              onChange={this._onChangeOpacity}
-            />
-          </div>
-        </div>
+            >
+              <Icon name="dropdown" />
+              Data Overlays
+            </Accordion.Title>
+            <Accordion.Content active={this.state.dataOverlaysExpanded}>
+              <Accordion as={Menu} vertical fluid styled>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysPhotosExpanded}
+                    content="Photos"
+                    index={0}
+                    onClick={() =>
+                      this.setState(prevState => ({
+                        dataOverlaysPhotosExpanded: !prevState.dataOverlaysPhotosExpanded,
+                      }))
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysPhotosExpanded}
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this.setState(prevState => ({
+                          layerPhotosVisible: !prevState.layerPhotosVisible,
+                        }))
+                      }
+                      checked={this.state.layerPhotosVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <Checkbox
+                      label="Show all photos"
+                      onChange={() =>
+                        this.setState(prevState => ({
+                          layerPhotosShowAll: !prevState.layerPhotosShowAll,
+                        }))
+                      }
+                      checked={this.state.layerPhotosShowAll}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysAirQualityExpanded}
+                    content="Current Air Quality"
+                    onClick={() =>
+                      this.setState(prevState => ({
+                        dataOverlaysAirQualityExpanded: !prevState.dataOverlaysAirQualityExpanded,
+                      }))
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysAirQualityExpanded}
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this.setState(prevState => ({
+                          layerAirQualityVisible: !prevState.layerAirQualityVisible,
+                        }))
+                      }
+                      checked={this.state.layerAirQualityVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerAirQualityOpacity"
+                      value={this.state.layerAirQualityOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysNationalParksExpanded}
+                    content="National Parks"
+                    onClick={() =>
+                      this.setState(prevState => ({
+                        dataOverlaysNationalParksExpanded: !prevState.dataOverlaysNationalParksExpanded,
+                      }))
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysNationalParksExpanded}
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this.setState(prevState => ({
+                          layerNationalParksVisible: !prevState.layerNationalParksVisible,
+                        }))
+                      }
+                      checked={this.state.layerNationalParksVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerNationalParksOpacity"
+                      value={this.state.layerNationalParksOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysSlopeAngleExpanded}
+                    content="Slope Angle Shading"
+                    onClick={() =>
+                      this.setState(prevState => ({
+                        dataOverlaysSlopeAngleExpanded: !prevState.dataOverlaysSlopeAngleExpanded,
+                      }))
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysSlopeAngleExpanded}
+                  >
+                    <Checkbox
+                      label="Slope Angle Shading"
+                      onChange={() =>
+                        this.setState(prevState => ({
+                          layerSlopeAngleVisible: !prevState.layerSlopeAngleVisible,
+                        }))
+                      }
+                      checked={this.state.layerSlopeAngleVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerSlopeAngleOpacity"
+                      value={this.state.layerSlopeAngleOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+              </Accordion>
+            </Accordion.Content>
+          </Accordion>
+        </Container>
 
         {this._renderTooltip()}
       </div>
