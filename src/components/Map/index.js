@@ -68,6 +68,7 @@ class Map extends React.Component {
     layerPhotosShowAll: false,
     layerAirQualityVisible: true,
     layerNationalParksVisible: true,
+    layerSlopeAngleVisible: true,
   };
 
   // Parse hash from url
@@ -203,7 +204,7 @@ class Map extends React.Component {
         data.features = data.features.map(f => {
           f.properties.favorite = Number(f.properties.favorite);
           return f;
-    });
+        });
         return data;
       },
 
@@ -329,6 +330,25 @@ class Map extends React.Component {
               />
             </Source>
 
+            <Source
+              id="slope-angle"
+              type="raster"
+              url="https://tiles.nst.guide/slope-angle-png/tile.json"
+            >
+              <Layer
+                id="slope-angle-raster"
+                type="raster"
+                paint={{
+                  'raster-opacity': 0.3,
+                }}
+                layout={{
+                  visibility: this.state.layerSlopeAngleVisible
+                    ? 'visible'
+                    : 'none',
+                }}
+              />
+            </Source>
+
             {/* ScaleControl needs to be _inside_ InteractiveMap */}
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
@@ -414,6 +434,17 @@ class Map extends React.Component {
                 }))
               }
               checked={this.state.layerNationalParksVisible}
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="Slope Angle Shading"
+              onChange={() =>
+                this.setState(prevState => ({
+                  layerSlopeAngleVisible: !prevState.layerSlopeAngleVisible,
+                }))
+              }
+              checked={this.state.layerSlopeAngleVisible}
             />
           </div>
         </div>
