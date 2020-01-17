@@ -13,7 +13,7 @@ import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP } from './utils';
 import { navigate } from 'gatsby';
-import { Checkbox } from 'semantic-ui-react';
+import { Checkbox, Header } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
 // You'll get obscure errors without including the Mapbox GL CSS
@@ -383,7 +383,7 @@ class Map extends React.Component {
         <div
           style={{
             position: 'absolute',
-            width: 200,
+            width: 180,
             left: 30,
             top: 160,
             zIndex: 1,
@@ -391,7 +391,7 @@ class Map extends React.Component {
             backgroundColor: '#fff',
           }}
         >
-          <h2>Data Overlays</h2>
+          <Header size='medium'>Data Overlays</Header>
           <div>
             <Checkbox
               label="Photos"
