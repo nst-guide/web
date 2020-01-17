@@ -14,6 +14,7 @@ import Select from 'react-select';
 import { canUseWebP } from './utils';
 import { navigate } from 'gatsby';
 import { Checkbox } from 'semantic-ui-react';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -64,6 +65,7 @@ class Map extends React.Component {
     pointerX: null,
     pointerY: null,
     layerPhotosVisible: true,
+    layerPhotosShowAll: false,
     layerAirQualityVisible: true,
     layerNationalParksVisible: true,
   };
@@ -160,7 +162,12 @@ class Map extends React.Component {
       // Interactive props
       pickable: true,
       autoHighlight: true,
-      onClick: () => console.log('clicked'),
+      onClick: info =>
+        this.setState({
+          hoveredObject: info.object,
+          pointerX: info.x,
+          pointerY: info.y,
+        }),
       // Update app state
       onHover: info =>
         this.setState({
@@ -170,20 +177,22 @@ class Map extends React.Component {
         }),
       // Visiblility based on state
       visible: this.state.layerPhotosVisible,
-    });
 
-    const trailLayer = new GeoJsonLayer({
-      id: 'trail',
-      data: 'https://tiles.nst.guide/pct/halfmile.geojson',
-      getLineWidth: 10,
-      filled: false,
-      stroked: false,
-      pickable: true,
-      autoHighlight: true,
-      lineWidthMinPixels: 2,
-      // Red if main trail; blue if alternate
-      getLineColor: f =>
-        f.properties.alternate ? [0, 38, 245, 200] : [235, 50, 35, 200],
+      // Mutate f.properties.favorite to Number so that DataFilter can be used
+      dataTransform: data => {
+        data.features = data.features.map(f => {
+          f.properties.favorite = Number(f.properties.favorite);
+          return f;
+    });
+        return data;
+      },
+
+      // Define extensions
+      extensions: [new DataFilterExtension({ filterSize: 1 })],
+
+      // props added by DataFilterExtension
+      getFilterValue: f => f.properties.favorite,
+      filterRange: this.state.layerPhotosShowAll ? [0, 1] : [1, 1],
     });
 
     const airQualityLayer = new GeoJsonLayer({
@@ -356,7 +365,18 @@ class Map extends React.Component {
           </div>
           <div>
             <Checkbox
-              label="Air Quality"
+              label="Show all photos"
+              onChange={() =>
+                this.setState(prevState => ({
+                  layerPhotosShowAll: !prevState.layerPhotosShowAll,
+                }))
+              }
+              checked={this.state.layerPhotosShowAll}
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="Current Air Quality"
               onChange={() =>
                 this.setState(prevState => ({
                   layerAirQualityVisible: !prevState.layerAirQualityVisible,
