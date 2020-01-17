@@ -179,6 +179,12 @@ class Map extends React.Component {
     this.setState({ [name]: Number(value) });
   };
 
+  _toggleState = name => {
+    this.setState(prevState => ({
+      [name]: !prevState[name],
+    }));
+  };
+
   render() {
     const { mapStyle } = this.state;
     const { location } = this.props;
@@ -422,11 +428,7 @@ class Map extends React.Component {
             <Accordion.Title
               active={this.state.dataOverlaysExpanded}
               index={0}
-              onClick={() =>
-                this.setState(prevState => ({
-                  dataOverlaysExpanded: !prevState.dataOverlaysExpanded,
-                }))
-              }
+              onClick={() => this._toggleState('dataOverlaysExpanded')}
             >
               <Icon name="dropdown" />
               Data Overlays
@@ -439,9 +441,7 @@ class Map extends React.Component {
                     content="Photos"
                     index={0}
                     onClick={() =>
-                      this.setState(prevState => ({
-                        dataOverlaysPhotosExpanded: !prevState.dataOverlaysPhotosExpanded,
-                      }))
+                      this._toggleState('dataOverlaysPhotosExpanded')
                     }
                   />
                   <Accordion.Content
@@ -449,21 +449,13 @@ class Map extends React.Component {
                   >
                     <Checkbox
                       label="Enabled"
-                      onChange={() =>
-                        this.setState(prevState => ({
-                          layerPhotosVisible: !prevState.layerPhotosVisible,
-                        }))
-                      }
+                      onChange={() => this._toggleState('layerPhotosVisible')}
                       checked={this.state.layerPhotosVisible}
                       style={{ paddingBottom: 10 }}
                     />
                     <Checkbox
                       label="Show all photos"
-                      onChange={() =>
-                        this.setState(prevState => ({
-                          layerPhotosShowAll: !prevState.layerPhotosShowAll,
-                        }))
-                      }
+                      onChange={() => this._toggleState('layerPhotosShowAll')}
                       checked={this.state.layerPhotosShowAll}
                     />
                   </Accordion.Content>
@@ -473,9 +465,7 @@ class Map extends React.Component {
                     active={this.state.dataOverlaysAirQualityExpanded}
                     content="Current Air Quality"
                     onClick={() =>
-                      this.setState(prevState => ({
-                        dataOverlaysAirQualityExpanded: !prevState.dataOverlaysAirQualityExpanded,
-                      }))
+                      this._toggleState('dataOverlaysAirQualityExpanded')
                     }
                   />
                   <Accordion.Content
@@ -484,9 +474,7 @@ class Map extends React.Component {
                     <Checkbox
                       label="Enabled"
                       onChange={() =>
-                        this.setState(prevState => ({
-                          layerAirQualityVisible: !prevState.layerAirQualityVisible,
-                        }))
+                        this._toggleState('layerAirQualityVisible')
                       }
                       checked={this.state.layerAirQualityVisible}
                       style={{ paddingBottom: 10 }}
@@ -503,9 +491,7 @@ class Map extends React.Component {
                     active={this.state.dataOverlaysNationalParksExpanded}
                     content="National Parks"
                     onClick={() =>
-                      this.setState(prevState => ({
-                        dataOverlaysNationalParksExpanded: !prevState.dataOverlaysNationalParksExpanded,
-                      }))
+                      this._toggleState('dataOverlaysNationalParksExpanded')
                     }
                   />
                   <Accordion.Content
@@ -514,9 +500,7 @@ class Map extends React.Component {
                     <Checkbox
                       label="Enabled"
                       onChange={() =>
-                        this.setState(prevState => ({
-                          layerNationalParksVisible: !prevState.layerNationalParksVisible,
-                        }))
+                        this._toggleState('layerNationalParksVisible')
                       }
                       checked={this.state.layerNationalParksVisible}
                       style={{ paddingBottom: 10 }}
@@ -533,9 +517,7 @@ class Map extends React.Component {
                     active={this.state.dataOverlaysSlopeAngleExpanded}
                     content="Slope Angle Shading"
                     onClick={() =>
-                      this.setState(prevState => ({
-                        dataOverlaysSlopeAngleExpanded: !prevState.dataOverlaysSlopeAngleExpanded,
-                      }))
+                      this._toggleState('dataOverlaysSlopeAngleExpanded')
                     }
                   />
                   <Accordion.Content
@@ -544,9 +526,7 @@ class Map extends React.Component {
                     <Checkbox
                       label="Slope Angle Shading"
                       onChange={() =>
-                        this.setState(prevState => ({
-                          layerSlopeAngleVisible: !prevState.layerSlopeAngleVisible,
-                        }))
+                        this._toggleState('layerSlopeAngleVisible')
                       }
                       checked={this.state.layerSlopeAngleVisible}
                       style={{ paddingBottom: 10 }}
