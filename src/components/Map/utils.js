@@ -23,6 +23,10 @@ export const beforeId = ({ layerType, mapStyle }) => {
   const name = mapStyle.split('/').slice(-1)[0];
   // If layer is to be placed on top, return null
   const placeOnTop = null;
+  if (name.startsWith('style-aerial') || name.startsWith('style-fstopo')) {
+    return placeOnTop;
+  }
+
   // Otherwise, place layer in the middle of the layer hierarchy
   // For now, 'building' is hardcoded as the layer below which to place the layer
   // This puts the layer below labels and POIs but above most everything else
@@ -34,9 +38,6 @@ export const beforeId = ({ layerType, mapStyle }) => {
     placeInMiddle = 'building';
   } else {
     placeInMiddle = 'building';
-  }
-  if (name.startsWith('style-aerial') || name.startsWith('style-fstopo')) {
-    return placeOnTop;
   }
   return placeInMiddle;
 };
