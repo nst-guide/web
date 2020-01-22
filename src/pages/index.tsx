@@ -10,6 +10,7 @@ import {
   Header,
   Icon,
 } from "semantic-ui-react";
+// import "../fonts/fonts.css"
 
 import Map from "../components/Map";
 
