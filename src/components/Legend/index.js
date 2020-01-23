@@ -30,7 +30,7 @@ export function SlopeAngleLegend(props) {
       <Header size="tiny">Legend</Header>
       <List divided>
         {slopeAngleLevels.map(level => (
-          <List.Item>
+          <List.Item key={level[0]}>
             <Label key={level[0]} horizontal>
               {level[0]}
               <Label.Detail>
