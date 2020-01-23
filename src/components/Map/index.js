@@ -22,7 +22,7 @@ import {
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 import { PhotoTooltip } from '../PhotoTooltip';
-import { SlopeAngleLegend } from '../Legend';
+import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -317,7 +317,7 @@ class Map extends React.Component {
                 }}
               />
               <Layer
-                id="hmline_line_al"
+                id="hmline_line_alt"
                 beforeId={beforeId({
                   layerType: 'vector',
                   mapStyle: mapStyle.value,
@@ -461,6 +461,7 @@ class Map extends React.Component {
                       value={this.state.layerAirQualityOpacity}
                       onChange={this._onChangeOpacity}
                     />
+                    <AirQualityLegend/>
                   </Accordion.Content>
                 </Menu.Item>
                 <Menu.Item>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, Label, Container, Header } from 'semantic-ui-react';
+import { List, Label, Icon, Container, Header, Grid } from 'semantic-ui-react';
 
 const slopeAngleLevels = [
   ['27°-29°', 'rgb(248, 253, 85)'],
@@ -9,6 +9,15 @@ const slopeAngleLevels = [
   ['46°-50°', 'rgb(122, 41, 217)'],
   ['51°-59°', 'rgb(0, 38, 245)'],
   ['60°+', 'rgb(0, 0, 0)'],
+];
+
+const airQualityLevels = [
+  ['Good', 'rgb(0, 228, 0)'],
+  ['Moderate', 'rgb(255, 255, 0)'],
+  ['Unhealthy for Sensitive Groups', 'rgb(255, 126, 0)'],
+  ['Unhealthy', 'rgb(255, 0, 0)'],
+  ['Very Unhealthy', 'rgb(143, 63, 1)'],
+  ['Hazardous', 'rgb(126, 0, 3)'],
 ];
 
 // I couldn't figure out a really simple way to assign the Label component an
@@ -31,6 +40,38 @@ export function SlopeAngleLegend(props) {
           </List.Item>
         ))}
       </List>
+    </Container>
+  );
+}
+
+// Since the air quality labels have more text, a grid seems much better than
+// Labels. I might want to make SlopeAngleLegend use Grid as well, but I'll
+// leave it for now.
+export function AirQualityLegend(props) {
+  return (
+    <Container>
+      <Header size="tiny">
+        Legend{' '}
+        <a
+          href="https://airnow.gov/index.cfm?action=aqibasics.aqi"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="AQI Info"
+        >
+          <Icon link name="question circle" />
+        </a>
+      </Header>
+
+      <Grid verticalAlign="middle" relaxed>
+        {airQualityLevels.map(level => (
+          <Grid.Row stretched key={level[0]}>
+            <Grid.Column width={10}>{level[0]}</Grid.Column>
+            <Grid.Column width={1}>
+              <ColoredSVGBox width={15} color={level[1]} />
+            </Grid.Column>
+          </Grid.Row>
+        ))}
+      </Grid>
     </Container>
   );
 }
