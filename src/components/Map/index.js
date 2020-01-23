@@ -72,13 +72,16 @@ class Map extends React.Component {
     dataOverlaysExpanded: false,
     dataOverlaysPhotosExpanded: false,
     dataOverlaysAirQualityExpanded: false,
+    dataOverlaysCurrentWildfireExpanded: false,
     dataOverlaysNationalParksExpanded: false,
     dataOverlaysSlopeAngleExpanded: false,
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
-    layerAirQualityVisible: true,
+    layerAirQualityVisible: false,
     layerAirQualityOpacity: 0.05,
-    layerNationalParksVisible: true,
+    layerCurrentWildfireVisible: true,
+    layerCurrentWildfireOpacity: 0.5,
+    layerNationalParksVisible: false,
     layerNationalParksOpacity: 0.3,
     layerSlopeAngleVisible: true,
     layerSlopeAngleOpacity: 0.3,
@@ -213,16 +216,32 @@ class Map extends React.Component {
       id: 'aqi_pm25',
       data: 'https://tiles.nst.guide/airnow/PM25.geojson',
       // Styles
-      pickable: true,
       opacity: this.state.layerAirQualityOpacity,
       getFillColor: f => f.properties.rgb.split(',').map(Number),
-      onClick: f => console.log(f),
-      onHover: () => console.log('hovered'),
-      // Visiblility based on state
       visible: this.state.layerAirQualityVisible,
     });
 
-    const layers = [airQualityLayer, photosLayer];
+    const currentWildfire = new GeoJsonLayer({
+      id: 'nifc_current',
+      data: 'https://tiles.nst.guide/nifc/current.geojson',
+      // Styles
+      opacity: this.state.layerCurrentWildfireOpacity,
+      getFillColor: [148, 17, 0],
+      // Interactive props
+      pickable: true,
+      autoHighlight: true,
+      onClick: info => {
+        console.log(info);
+        this.setState({
+          hoveredObject: info.object,
+          pointerX: info.x,
+          pointerY: info.y,
+        });
+      },
+      visible: this.state.layerCurrentWildfireVisible,
+    });
+
+    const layers = [airQualityLayer, photosLayer, currentWildfire];
 
     return (
       <div ref={ref => (this.deckDiv = ref)}>
@@ -370,6 +389,32 @@ class Map extends React.Component {
                       onChange={this._onChangeOpacity}
                     />
                     <AirQualityLegend />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysCurrentWildfireExpanded}
+                    content="Current Wildfire"
+                    onClick={() =>
+                      this._toggleState('dataOverlaysCurrentWildfireExpanded')
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysCurrentWildfireExpanded}
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this._toggleState('layerCurrentWildfireVisible')
+                      }
+                      checked={this.state.layerCurrentWildfireVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerCurrentWildfireOpacity"
+                      value={this.state.layerCurrentWildfireOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
                   </Accordion.Content>
                 </Menu.Item>
                 <Menu.Item>
