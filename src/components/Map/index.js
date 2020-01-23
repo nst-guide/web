@@ -247,27 +247,27 @@ class Map extends React.Component {
             mapOptions={{ hash: true }}
           >
             <NationalParkLayer
-                beforeId={beforeId({
-                  layerType: 'raster',
-                  mapStyle: mapStyle.value,
-                })}
+              beforeId={beforeId({
+                layerType: 'raster',
+                mapStyle: mapStyle.value,
+              })}
               opacity={this.state.layerNationalParksOpacity}
               visible={this.state.layerNationalParksVisible}
-              />
+            />
             <SlopeAngleLayer
-                beforeId={beforeId({
-                  layerType: 'raster',
-                  mapStyle: mapStyle.value,
-                })}
+              beforeId={beforeId({
+                layerType: 'raster',
+                mapStyle: mapStyle.value,
+              })}
               opacity={this.state.layerSlopeAngleOpacity}
               visible={this.state.layerSlopeAngleVisible}
-              />
+            />
             <PCTTrailLayer
-                beforeId={beforeId({
-                  layerType: 'vector',
-                  mapStyle: mapStyle.value,
-                })}
-              />
+              beforeId={beforeId({
+                layerType: 'vector',
+                mapStyle: mapStyle.value,
+              })}
+            />
             {/* ScaleControl needs to be _inside_ InteractiveMap */}
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
@@ -309,14 +309,14 @@ class Map extends React.Component {
             backgroundColor: '#fff',
           }}
         >
-          <Accordion as={Menu} vertical fluid styled style={{maxWidth: 240}}>
+          <Accordion as={Menu} vertical fluid styled style={{ maxWidth: 240 }}>
             <Accordion.Title
               active={this.state.dataOverlaysExpanded}
               index={0}
               onClick={() => this._toggleState('dataOverlaysExpanded')}
             >
               <Icon name="dropdown" />
-              Data Overlays
+              Map options
             </Accordion.Title>
             <Accordion.Content active={this.state.dataOverlaysExpanded}>
               <Accordion as={Menu} vertical fluid styled>
@@ -369,7 +369,7 @@ class Map extends React.Component {
                       value={this.state.layerAirQualityOpacity}
                       onChange={this._onChangeOpacity}
                     />
-                    <AirQualityLegend/>
+                    <AirQualityLegend />
                   </Accordion.Content>
                 </Menu.Item>
                 <Menu.Item>
@@ -424,7 +424,7 @@ class Map extends React.Component {
                       value={this.state.layerSlopeAngleOpacity}
                       onChange={this._onChangeOpacity}
                     />
-                    <SlopeAngleLegend/>
+                    <SlopeAngleLegend />
                   </Accordion.Content>
                 </Menu.Item>
               </Accordion>
