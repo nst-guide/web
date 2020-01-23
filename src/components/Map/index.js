@@ -15,7 +15,11 @@ import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 import { PhotoTooltip } from '../PhotoTooltip';
 import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
-import { NationalParkLayer, SlopeAngleLayer, PCTTrailLayer } from './MapLayer';
+import {
+  NationalParkLayer,
+  SlopeAngleLayer,
+  PCTTrailLayer,
+} from './MapboxLayer';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
