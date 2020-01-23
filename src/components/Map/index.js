@@ -9,14 +9,20 @@ import InteractiveMap, {
   Source,
   Layer,
 } from 'react-map-gl';
-import Image from '../Image';
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import { Accordion, Checkbox, Container, Icon, Menu } from 'semantic-ui-react';
+import {
+  Accordion,
+  Checkbox,
+  Container,
+  Icon,
+  Menu,
+} from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 import { PhotoTooltip } from '../PhotoTooltip';
+import { SlopeAngleLegend } from '../Legend';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -395,7 +401,7 @@ class Map extends React.Component {
             backgroundColor: '#fff',
           }}
         >
-          <Accordion as={Menu} vertical fluid styled>
+          <Accordion as={Menu} vertical fluid styled style={{maxWidth: 240}}>
             <Accordion.Title
               active={this.state.dataOverlaysExpanded}
               index={0}
@@ -495,18 +501,21 @@ class Map extends React.Component {
                     active={this.state.dataOverlaysSlopeAngleExpanded}
                   >
                     <Checkbox
-                      label="Slope Angle Shading"
+                      label="Enabled"
                       onChange={() =>
                         this._toggleState('layerSlopeAngleVisible')
                       }
                       checked={this.state.layerSlopeAngleVisible}
-                      style={{ paddingBottom: 10 }}
+                      style={{
+                        paddingBottom: 10,
+                      }}
                     />
                     <OpacitySlider
                       name="layerSlopeAngleOpacity"
                       value={this.state.layerSlopeAngleOpacity}
                       onChange={this._onChangeOpacity}
                     />
+                    <SlopeAngleLegend/>
                   </Accordion.Content>
                 </Menu.Item>
               </Accordion>
