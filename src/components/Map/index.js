@@ -16,6 +16,7 @@ import { navigate } from 'gatsby';
 import { Accordion, Checkbox, Container, Icon, Menu } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
+import { PhotoTooltip } from '../PhotoTooltip';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -123,44 +124,14 @@ class Map extends React.Component {
 
   _renderTooltip() {
     const { hoveredObject, pointerX, pointerY } = this.state || {};
+
     return (
       hoveredObject && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 3,
-            pointerEvents: 'none',
-            left:
-              pointerX <= window.innerWidth / 2
-                ? Math.min(window.innerWidth * 0.3, pointerX)
-                : null,
-            right:
-              pointerX > window.innerWidth / 2
-                ? Math.min(
-                    window.innerWidth * 0.3,
-                    window.innerWidth - pointerX,
-                  )
-                : null,
-            top:
-              pointerY <= window.innerHeight / 2
-                ? Math.min(window.innerHeight * 0.5, pointerY)
-                : null,
-            bottom:
-              pointerY > window.innerHeight / 2
-                ? Math.min(
-                    window.innerHeight * 0.5,
-                    window.innerHeight - pointerY,
-                  )
-                : null,
-            width: '70%',
-            maxWidth: '600px',
-          }}
-        >
-          <Image
-            alt="Gatsby in Space"
-            filename={`photos/${hoveredObject.id}.jpeg`}
+        <PhotoTooltip
+          hoveredObject={hoveredObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
           />
-        </div>
       )
     );
   }
