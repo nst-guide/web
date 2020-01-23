@@ -6,23 +6,16 @@ import InteractiveMap, {
   _MapContext as MapContext,
   NavigationControl,
   ScaleControl,
-  Source,
-  Layer,
 } from 'react-map-gl';
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import {
-  Accordion,
-  Checkbox,
-  Container,
-  Icon,
-  Menu,
-} from 'semantic-ui-react';
+import { Accordion, Checkbox, Container, Icon, Menu } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 import { PhotoTooltip } from '../PhotoTooltip';
 import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
+import { NationalParkLayer, SlopeAngleLayer, PCTTrailLayer } from './MapLayer';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -249,117 +242,28 @@ class Map extends React.Component {
             mapStyle={mapStyle.value}
             mapOptions={{ hash: true }}
           >
-            <Source
-              id="nationalpark"
-              type="vector"
-              url="https://tiles.nst.guide/nationalpark/tile.json"
-            >
-              <Layer
-                id="nationalpark_fill"
+            <NationalParkLayer
                 beforeId={beforeId({
                   layerType: 'raster',
                   mapStyle: mapStyle.value,
                 })}
-                type="fill"
-                source-layer="nationalpark"
-                paint={{
-                  'fill-opacity': this.state.layerNationalParksOpacity,
-                  'fill-color': 'rgb(115, 77, 38)',
-                }}
-                layout={{
-                  visibility: this.state.layerNationalParksVisible
-                    ? 'visible'
-                    : 'none',
-                }}
+              opacity={this.state.layerNationalParksOpacity}
+              visible={this.state.layerNationalParksVisible}
               />
-            </Source>
-
-            <Source
-              id="slope-angle"
-              type="raster"
-              url="https://tiles.nst.guide/slope-angle-png/tile.json"
-            >
-              <Layer
-                id="slope-angle-raster"
+            <SlopeAngleLayer
                 beforeId={beforeId({
                   layerType: 'raster',
                   mapStyle: mapStyle.value,
                 })}
-                type="raster"
-                paint={{
-                  'raster-opacity': this.state.layerSlopeAngleOpacity,
-                }}
-                layout={{
-                  visibility: this.state.layerSlopeAngleVisible
-                    ? 'visible'
-                    : 'none',
-                }}
+              opacity={this.state.layerSlopeAngleOpacity}
+              visible={this.state.layerSlopeAngleVisible}
               />
-            </Source>
-
-            <Source
-              id="hmline"
-              type="vector"
-              url="https://tiles.nst.guide/pct/hmline/tile.json"
-              maxzoom={11}
-            >
-              <Layer
-                id="hmline_line_pct"
+            <PCTTrailLayer
                 beforeId={beforeId({
                   layerType: 'vector',
                   mapStyle: mapStyle.value,
                 })}
-                source-layer="hmline"
-                type="line"
-                filter={['==', 'alternate', false]}
-                paint={{
-                  'line-color': 'rgb(235, 50, 35)',
-                }}
               />
-              <Layer
-                id="hmline_line_alt"
-                beforeId={beforeId({
-                  layerType: 'vector',
-                  mapStyle: mapStyle.value,
-                })}
-                source-layer="hmline"
-                type="line"
-                filter={['==', 'alternate', true]}
-                paint={{
-                  'line-color': 'rgb(0, 38, 245)',
-                }}
-              />
-              <Layer
-                id="hmline_label"
-                source-layer="hmline"
-                type="symbol"
-                layout={{
-                  'symbol-placement': 'line',
-                  'text-anchor': 'center',
-                  'text-field': '{name}',
-                  'text-font': ['Open Sans Regular'],
-                  'text-offset': [1, 0],
-                  'text-size': {
-                    base: 1,
-                    stops: [
-                      [5, 10],
-                      [14, 13],
-                    ],
-                  },
-                  'symbol-spacing': 350,
-                  'text-max-angle': 50,
-                  'text-letter-spacing': 0,
-                  'text-max-width': 15,
-                  'text-allow-overlap': true,
-                }}
-                paint={{
-                  'text-color': 'rgba(30, 30, 30, 1)',
-                  'text-halo-blur': 0.5,
-                  'text-halo-width': 1.5,
-                  'text-halo-color': 'rgba(255, 255, 255, 1)',
-                }}
-              />
-            </Source>
             {/* ScaleControl needs to be _inside_ InteractiveMap */}
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
