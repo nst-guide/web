@@ -28,12 +28,16 @@ export function PhotoTooltip(props) {
             : null,
         width: '70%',
         maxWidth: '600px',
+        backgroundColor: 'white',
       }}
     >
       <Image
         alt={hoveredObject.properties.description || 'Image'}
         filename={`photos/${hoveredObject.id}.jpeg`}
       />
+      {hoveredObject.properties.description && (
+        <p>{hoveredObject.properties.description}</p>
+      )}
     </div>
   );
 }
