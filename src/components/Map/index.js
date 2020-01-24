@@ -10,7 +10,7 @@ import InteractiveMap, {
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import { Accordion, Checkbox, Container, Icon, Menu } from 'semantic-ui-react';
+import { Accordion, Checkbox, Container, Icon, Menu, Button } from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
 import { PhotoTooltip } from '../PhotoTooltip';
@@ -69,12 +69,14 @@ class Map extends React.Component {
     hoveredObject: null,
     pointerX: null,
     pointerY: null,
+    mapUnitsMetric: false,
     dataOverlaysExpanded: false,
     dataOverlaysPhotosExpanded: false,
     dataOverlaysAirQualityExpanded: false,
     dataOverlaysCurrentWildfireExpanded: false,
     dataOverlaysNationalParksExpanded: false,
     dataOverlaysSlopeAngleExpanded: false,
+    dataOverlaysMapUnitsExpanded: false,
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
     layerAirQualityVisible: false,
@@ -350,7 +352,7 @@ class Map extends React.Component {
               onClick={() => this._toggleState('dataOverlaysExpanded')}
             >
               <Icon name="dropdown" />
-              Map options
+              Map Options
             </Accordion.Title>
             <Accordion.Content active={this.state.dataOverlaysExpanded}>
               <Accordion as={Menu} vertical fluid styled>
@@ -485,6 +487,37 @@ class Map extends React.Component {
                       onChange={this._onChangeOpacity}
                     />
                     <SlopeAngleLegend />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={this.state.dataOverlaysMapUnitsExpanded}
+                    content="Map Units"
+                    onClick={() =>
+                      this._toggleState('dataOverlaysMapUnitsExpanded')
+                    }
+                  />
+                  <Accordion.Content
+                    active={this.state.dataOverlaysMapUnitsExpanded}
+                  >
+                    <Button.Group compact>
+                      <Button
+                        compact
+                        toggle
+                        active={this.state.mapUnitsMetric}
+                        onClick={() => this.setState({ mapUnitsMetric: true })}
+                      >
+                        Metric
+                      </Button>
+                      <Button
+                        compact
+                        toggle
+                        active={!this.state.mapUnitsMetric}
+                        onClick={() => this.setState({ mapUnitsMetric: false })}
+                      >
+                        Imperial
+                      </Button>
+                    </Button.Group>
                   </Accordion.Content>
                 </Menu.Item>
               </Accordion>
