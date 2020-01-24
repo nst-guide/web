@@ -28,18 +28,16 @@ export function SlopeAngleLegend(props) {
   return (
     <Container>
       <Header size="tiny">Legend</Header>
-      <List divided>
+      <Grid verticalAlign="middle" relaxed>
         {slopeAngleLevels.map(level => (
-          <List.Item key={level[0]}>
-            <Label key={level[0]} horizontal>
-              {level[0]}
-              <Label.Detail>
-                <ColoredSVGBox width={10} color={level[1]} />
-              </Label.Detail>
-            </Label>
-          </List.Item>
+          <Grid.Row stretched key={level[0]}>
+            <Grid.Column width={10}>{level[0]}</Grid.Column>
+            <Grid.Column width={1}>
+              <ColoredSVGBox width={15} color={level[1]} />
+            </Grid.Column>
+          </Grid.Row>
         ))}
-      </List>
+      </Grid>
     </Container>
   );
 }
