@@ -348,7 +348,10 @@ class Map extends React.Component {
             <div
               style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 1 }}
             >
-              <ScaleControl maxWidth={150} unit="imperial" />
+              <ScaleControl
+                maxWidth={150}
+                unit={this.state.mapUnitsMetric ? 'metric' : 'imperial'}
+              />
             </div>
           </InteractiveMap>
 
