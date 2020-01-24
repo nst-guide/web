@@ -8,7 +8,8 @@ import InteractiveMap, {
   ScaleControl,
 } from 'react-map-gl';
 import Select from 'react-select';
-import { canUseWebP, beforeId, getInitialViewState } from './utils';
+import { beforeId, getInitialViewState } from './utils';
+import { loadMapStyle, mapStyles } from './mapStyle';
 import {
   Accordion,
   Checkbox,
@@ -34,35 +35,6 @@ import {
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
-
-const webp = canUseWebP();
-
-const mapStyles = [
-  {
-    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style${
-      webp ? '' : '-png'
-    }.json`,
-    label: 'OSM Topo',
-  },
-  {
-    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-fstopo${
-      webp ? '' : '-png'
-    }.json`,
-    label: 'USFS Topo',
-  },
-  {
-    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-hybrid${
-      webp ? '' : '-png'
-    }.json`,
-    label: 'Aerial Hybrid',
-  },
-  {
-    value: `https://raw.githubusercontent.com/nst-guide/osm-liberty-topo/gh-pages/style-aerial${
-      webp ? '' : '-png'
-    }.json`,
-    label: 'Aerial',
-  },
-];
 
 class Map extends React.Component {
   state = {
@@ -271,13 +243,13 @@ class Map extends React.Component {
             ref={ref => {
               this.map = ref && ref.getMap();
             }}
-            mapStyle={mapStyle.value}
+            mapStyle={mapStyle.json ? mapStyle.json : mapStyle.url}
             mapOptions={{ hash: true }}
           >
             <NationalParkLayer
               beforeId={beforeId({
                 layerType: 'raster',
-                mapStyle: mapStyle.value,
+                mapStyle: mapStyle.id,
               })}
               opacity={this.state.layerNationalParksOpacity}
               visible={this.state.layerNationalParksVisible}
@@ -285,7 +257,7 @@ class Map extends React.Component {
             <SlopeAngleLayer
               beforeId={beforeId({
                 layerType: 'raster',
-                mapStyle: mapStyle.value,
+                mapStyle: mapStyle.id,
               })}
               opacity={this.state.layerSlopeAngleOpacity}
               visible={this.state.layerSlopeAngleVisible}
@@ -293,7 +265,7 @@ class Map extends React.Component {
             <PCTTrailLayer
               beforeId={beforeId({
                 layerType: 'vector',
-                mapStyle: mapStyle.value,
+                mapStyle: mapStyle.id,
               })}
             />
             {/* ScaleControl needs to be _inside_ InteractiveMap */}
@@ -323,8 +295,15 @@ class Map extends React.Component {
         >
           <Select
             value={mapStyle}
+            isSearchable={false}
             onChange={choice => {
-              this.setState({ mapStyle: choice });
+              loadMapStyle({
+                url: choice.url,
+                mapUnitsMetric: this.state.mapUnitsMetric,
+              }).then(json => {
+                choice.json = json;
+                this.setState({ mapStyle: choice });
+              });
             }}
             options={mapStyles}
           />
@@ -514,7 +493,21 @@ class Map extends React.Component {
                         compact
                         toggle
                         active={this.state.mapUnitsMetric}
-                        onClick={() => this.setState({ mapUnitsMetric: true })}
+                        onClick={() => {
+                          let mapStyle = this.state.mapStyle;
+                          const mapUnitsMetric = true;
+                          loadMapStyle({
+                            url: mapStyle.url,
+                            mapUnitsMetric: mapUnitsMetric,
+                          }).then(json => {
+                            mapStyle.json = json;
+                            console.log(mapStyle);
+                            this.setState({
+                              mapStyle: mapStyle,
+                              mapUnitsMetric: mapUnitsMetric,
+                            });
+                          });
+                        }}
                       >
                         Metric
                       </Button>
@@ -522,7 +515,21 @@ class Map extends React.Component {
                         compact
                         toggle
                         active={!this.state.mapUnitsMetric}
-                        onClick={() => this.setState({ mapUnitsMetric: false })}
+                        onClick={() => {
+                          let mapStyle = this.state.mapStyle;
+                          const mapUnitsMetric = false;
+                          loadMapStyle({
+                            url: mapStyle.url,
+                            mapUnitsMetric: mapUnitsMetric,
+                          }).then(json => {
+                            mapStyle.json = json;
+                            console.log(mapStyle);
+                            this.setState({
+                              mapStyle: mapStyle,
+                              mapUnitsMetric: mapUnitsMetric,
+                            });
+                          });
+                        }}
                       >
                         Imperial
                       </Button>
