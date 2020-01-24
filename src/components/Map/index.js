@@ -20,6 +20,7 @@ import {
   SlopeAngleLayer,
   PCTTrailLayer,
 } from './MapboxLayer';
+import { CurrentWildfireTooltip } from '../Tooltip';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -66,7 +67,8 @@ const mapStyles = [
 class Map extends React.Component {
   state = {
     mapStyle: mapStyles[0],
-    hoveredObject: null,
+    pickedObject: null,
+    pickedLayer: null,
     pointerX: null,
     pointerY: null,
     mapUnitsMetric: false,
@@ -131,17 +133,28 @@ class Map extends React.Component {
   }
 
   _renderTooltip() {
-    const { hoveredObject, pointerX, pointerY } = this.state || {};
+    const { pickedObject, pickedLayer, pointerX, pointerY } = this.state || {};
 
+    if (!pickedObject) return;
+
+    if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
     return (
-      hoveredObject && (
         <PhotoTooltip
-          hoveredObject={hoveredObject}
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+        />
+      );
+    }
+    if (pickedObject && pickedLayer && pickedLayer.id === 'nifc_current') {
+      return (
+        <CurrentWildfireTooltip
+          object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
           />
-      )
     );
+  }
   }
 
   // Called on click by deck.gl
@@ -155,7 +168,8 @@ class Map extends React.Component {
     // won't query for the Mapbox layers underneath
     if (object && layer) {
       this.setState({
-        hoveredObject: object,
+        pickedObject: object,
+        pickedLayer: layer,
         pointerX: x,
         pointerY: y,
       });
@@ -174,7 +188,7 @@ class Map extends React.Component {
     console.log(features);
 
     this.setState({
-      hoveredObject: null,
+      pickedObject: null,
     });
     return;
   };
@@ -247,14 +261,8 @@ class Map extends React.Component {
       // Interactive props
       pickable: true,
       autoHighlight: true,
-      onClick: info => {
-        console.log(info);
-        this.setState({
-          hoveredObject: info.object,
-          pointerX: info.x,
-          pointerY: info.y,
-        });
-      },
+      onClick: this._onClick,
+      onHover: this._onClick,
       visible: this.state.layerCurrentWildfireVisible,
     });
 

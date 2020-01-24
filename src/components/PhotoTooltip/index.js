@@ -2,7 +2,7 @@ import * as React from 'react';
 import Image from '../Image';
 
 export function PhotoTooltip(props) {
-  const { hoveredObject, pointerX, pointerY } = props || {};
+  const { object, pointerX, pointerY } = props || {};
 
   return (
     <div
@@ -32,11 +32,11 @@ export function PhotoTooltip(props) {
       }}
     >
       <Image
-        alt={hoveredObject.properties.description || 'Image'}
-        filename={`photos/${hoveredObject.id}.jpeg`}
+        alt={object.properties.description || 'Image'}
+        filename={`photos/${object.id}.jpeg`}
       />
-      {hoveredObject.properties.description && (
-        <p>{hoveredObject.properties.description}</p>
+      {object.properties.description && (
+        <p>{object.properties.description}</p>
       )}
     </div>
   );
