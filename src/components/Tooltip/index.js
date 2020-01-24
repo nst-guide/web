@@ -117,8 +117,24 @@ export function NationalParkTooltip(props) {
 }
 
 function humanReadableDate(dateStr) {
+  // Make sure dateStr ends in Z
+  // Apparently using Date.parse is very hacky
+  // https://stackoverflow.com/a/33909265
+  // If the dateStr doesn't end in Z, it's assumed to have the timezone of the
+  // current locale
+  if (dateStr.slice(-1) !== 'Z') {
+    dateStr += 'Z';
+  }
+
   const dateObject = new Date(Date.parse(dateStr));
-  const dateReadable = dateObject.toDateString();
+  const dateReadable = dateObject.toLocaleString('en-US', {
+    timeZone: 'America/Los_Angeles',
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
   return dateReadable;
 }
 

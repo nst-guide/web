@@ -91,13 +91,11 @@ export function loadMapStyle({ url, mapUnitsMetric }) {
         if (metricLayerIds.includes(layer.id)) {
           layer.layout = layer.layout || {};
           layer.layout.visibility = 'visible';
-          console.log(layer);
         }
 
         if (imperialLayerIds.includes(layer.id)) {
           layer.layout = layer.layout || {};
           layer.layout.visibility = 'none';
-          console.log(layer);
         }
       }
       return json;
