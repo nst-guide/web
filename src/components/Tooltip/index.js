@@ -38,7 +38,6 @@ function TooltipDiv(props) {
 
 export function PhotoTooltip(props) {
   const { object, pointerX, pointerY } = props || {};
-  console.log(object);
 
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="70%">
