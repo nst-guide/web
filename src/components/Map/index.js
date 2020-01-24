@@ -314,6 +314,7 @@ class Map extends React.Component {
           ContextProvider={MapContext.Provider}
           onClick={this._onClick}
           onHover={this._onClick}
+          pickingRadius={10}
         >
           <InteractiveMap
             ref={ref => {
