@@ -10,17 +10,28 @@ import InteractiveMap, {
 import Select from 'react-select';
 import { canUseWebP, beforeId } from './utils';
 import { navigate } from 'gatsby';
-import { Accordion, Checkbox, Container, Icon, Menu, Button } from 'semantic-ui-react';
+import {
+  Accordion,
+  Checkbox,
+  Container,
+  Icon,
+  Menu,
+  Button,
+} from 'semantic-ui-react';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { OpacitySlider } from './OpacitySlider';
-import { PhotoTooltip } from '../PhotoTooltip';
 import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
 import {
   NationalParkLayer,
   SlopeAngleLayer,
   PCTTrailLayer,
+  interactiveLayerIds,
 } from './MapboxLayer';
-import { CurrentWildfireTooltip } from '../Tooltip';
+import {
+  CurrentWildfireTooltip,
+  NationalParkTooltip,
+  PhotoTooltip,
+} from '../Tooltip';
 
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
@@ -155,6 +166,15 @@ class Map extends React.Component {
           />
     );
   }
+    if (pickedObject && pickedLayer && pickedLayer.id === 'nationalpark_fill') {
+      return (
+        <NationalParkTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+        />
+      );
+  }
   }
 
   // Called on click by deck.gl
@@ -167,13 +187,12 @@ class Map extends React.Component {
     // If object and layer both exist, then deck.gl found an object, and I
     // won't query for the Mapbox layers underneath
     if (object && layer) {
-      this.setState({
+      return this.setState({
         pickedObject: object,
         pickedLayer: layer,
         pointerX: x,
         pointerY: y,
       });
-      return;
     }
 
     // You can pass those coordinates to React Map GL's queryRenderedFeatures
@@ -185,7 +204,19 @@ class Map extends React.Component {
       [x - hitbox, y - hitbox],
       [x + hitbox, y + hitbox],
     ]);
-    console.log(features);
+
+    // Find the first feature where the layer id is in interactiveLayerIDs
+    const pickedFeature = features.find(feature =>
+      interactiveLayerIds.includes(feature.layer.id),
+    );
+    if (pickedFeature) {
+      return this.setState({
+        pickedObject: pickedFeature,
+        pickedLayer: pickedFeature.layer,
+        pointerX: x,
+        pointerY: y,
+      });
+    }
 
     this.setState({
       pickedObject: null,
@@ -282,6 +313,7 @@ class Map extends React.Component {
           layers={layers}
           ContextProvider={MapContext.Provider}
           onClick={this._onClick}
+          onHover={this._onClick}
         >
           <InteractiveMap
             ref={ref => {

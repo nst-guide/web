@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { Source, Layer } from 'react-map-gl';
 
+// List of Mapbox/React Map GL layer ids that are allowed to be picked
+// These will be picked if no deck.gl layer is above it.
+export const interactiveLayerIds = [
+  // React map gl layers:
+  'nationalpark_fill',
+  // Basemap layers:
+];
+
 export function NationalParkLayer(props) {
   const { beforeId, opacity, visible } = props;
   return (

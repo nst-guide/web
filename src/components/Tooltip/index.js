@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Card } from 'semantic-ui-react';
+import Image from '../Image';
 
 function TooltipDiv(props) {
-  const {x, y, width = '70%', maxWidth = '600px'} = props;
+  const { x, y, width = '70%', maxWidth = '600px' } = props;
   return (
     <div
       style={{
@@ -27,11 +28,39 @@ function TooltipDiv(props) {
             : null,
         width: width,
         maxWidth: maxWidth,
-        // backgroundColor: 'white',
+        backgroundColor: 'white',
       }}
     >
       {props.children}
     </div>
+  );
+}
+
+export function PhotoTooltip(props) {
+  const { object, pointerX, pointerY } = props || {};
+  console.log(object);
+
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} width="70%">
+      <Card style={{ width: '100%' }}>
+        <Image
+          alt={object.properties.description || 'Image'}
+          filename={`photos/${object.id}.jpeg`}
+        />
+        <Card.Content>
+          {object && object.properties && object.properties.date && (
+            <Card.Meta>
+              <span className="date">
+                {humanReadableDate(object.properties.date)}
+              </span>
+            </Card.Meta>
+          )}
+          {object && object.properties && object.properties.description && (
+            <Card.Description>{object.properties.description}</Card.Description>
+          )}
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
   );
 }
 
@@ -68,6 +97,20 @@ export function CurrentWildfireTooltip(props) {
               </a>
             </p>
           </Card.Description>
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
+  );
+}
+
+export function NationalParkTooltip(props) {
+  const { object, pointerX, pointerY } = props || {};
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} width="200px">
+      <Card>
+        <Card.Content>
+          <Card.Header>{object.properties.UNIT_NAME}</Card.Header>
+          <Card.Description></Card.Description>
         </Card.Content>
       </Card>
     </TooltipDiv>
