@@ -12,7 +12,6 @@ const slopeAngleLevels = [
 ];
 
 const airQualityLevels = [
-  ['Good', 'rgb(0, 228, 0)'],
   ['Moderate', 'rgb(255, 255, 0)'],
   ['Unhealthy for Sensitive Groups', 'rgb(255, 126, 0)'],
   ['Unhealthy', 'rgb(255, 0, 0)'],
