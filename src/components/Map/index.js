@@ -149,7 +149,7 @@ class Map extends React.Component {
     if (!pickedObject) return;
 
     if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
-    return (
+      return (
         <PhotoTooltip
           object={pickedObject}
           pointerX={pointerX}
@@ -163,9 +163,9 @@ class Map extends React.Component {
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
-          />
-    );
-  }
+        />
+      );
+    }
     if (pickedObject && pickedLayer && pickedLayer.id === 'nationalpark_fill') {
       return (
         <NationalParkTooltip
@@ -174,7 +174,7 @@ class Map extends React.Component {
           pointerY={pointerY}
         />
       );
-  }
+    }
   }
 
   // Called on click by deck.gl
