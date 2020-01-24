@@ -142,14 +142,39 @@ class Map extends React.Component {
     );
   }
 
+  // Called on click by deck.gl
+  // event.x, event.y are the clicked x and y coordinates in pixels
+  // If the deck.gl picking engine finds something, the `object` , `color` and
+  // `layer` attributes will be non-null
   _onClick = event => {
-    // event.x and event.y hold the clicked x and y coordinates in pixels
+    const { x, y, object, layer } = event;
+
+    // If object and layer both exist, then deck.gl found an object, and I
+    // won't query for the Mapbox layers underneath
+    if (object && layer) {
+      this.setState({
+        hoveredObject: object,
+        pointerX: x,
+        pointerY: y,
+      });
+      return;
+    }
+
     // You can pass those coordinates to React Map GL's queryRenderedFeatures
     // to query any desired layers rendered there.
     // Make sure you create the ref on InteractiveMap or StaticMap
     // Without an options parameter, checks all layers rendered by React Map GL
-    const features = this.map.queryRenderedFeatures([event.x, event.y]);
+    const hitbox = 10;
+    const features = this.map.queryRenderedFeatures([
+      [x - hitbox, y - hitbox],
+      [x + hitbox, y + hitbox],
+    ]);
     console.log(features);
+
+    this.setState({
+      hoveredObject: null,
+    });
+    return;
   };
 
   _onChangeOpacity = (e, { name, value }) => {
@@ -179,19 +204,9 @@ class Map extends React.Component {
       // Interactive props
       pickable: true,
       autoHighlight: true,
-      onClick: info =>
-        this.setState({
-          hoveredObject: info.object,
-          pointerX: info.x,
-          pointerY: info.y,
-        }),
+      onClick: this._onClick,
       // Update app state
-      onHover: info =>
-        this.setState({
-          hoveredObject: info.object,
-          pointerX: info.x,
-          pointerY: info.y,
-        }),
+      onHover: this._onClick,
       // Visiblility based on state
       visible: this.state.layerPhotosVisible,
 
