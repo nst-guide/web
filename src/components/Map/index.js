@@ -84,12 +84,7 @@ class Map extends React.Component {
     pointerY: null,
     mapUnitsMetric: false,
     dataOverlaysExpanded: false,
-    dataOverlaysPhotosExpanded: false,
-    dataOverlaysAirQualityExpanded: false,
-    dataOverlaysCurrentWildfireExpanded: false,
-    dataOverlaysNationalParksExpanded: false,
-    dataOverlaysSlopeAngleExpanded: false,
-    dataOverlaysMapUnitsExpanded: false,
+    dataOverlaysExpandedSection: null,
     layerPhotosVisible: true,
     layerPhotosShowAll: false,
     layerAirQualityVisible: false,
@@ -231,6 +226,14 @@ class Map extends React.Component {
   _toggleState = name => {
     this.setState(prevState => ({
       [name]: !prevState[name],
+    }));
+  };
+
+  _toggleMapOptionsExpanded = value => {
+    // If currently expanded, close it; else open this section
+    this.setState(prevState => ({
+      dataOverlaysExpandedSection:
+        prevState.dataOverlaysExpandedSection === value ? null : value,
     }));
   };
 
@@ -402,15 +405,13 @@ class Map extends React.Component {
               <Accordion as={Menu} vertical fluid styled>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysPhotosExpanded}
+                    active={this.state.dataOverlaysExpandedSection === 'photos'}
                     content="Photos"
                     index={0}
-                    onClick={() =>
-                      this._toggleState('dataOverlaysPhotosExpanded')
-                    }
+                    onClick={() => this._toggleMapOptionsExpanded('photos')}
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysPhotosExpanded}
+                    active={this.state.dataOverlaysExpandedSection === 'photos'}
                   >
                     <Checkbox
                       label="Enabled"
@@ -427,14 +428,16 @@ class Map extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysAirQualityExpanded}
-                    content="Current Air Quality"
-                    onClick={() =>
-                      this._toggleState('dataOverlaysAirQualityExpanded')
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'airquality'
                     }
+                    content="Current Air Quality"
+                    onClick={() => this._toggleMapOptionsExpanded('airquality')}
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysAirQualityExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'airquality'
+                    }
                   >
                     <Checkbox
                       label="Enabled"
@@ -454,14 +457,20 @@ class Map extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysCurrentWildfireExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'currentwildfire'
+                    }
                     content="Current Wildfire"
                     onClick={() =>
-                      this._toggleState('dataOverlaysCurrentWildfireExpanded')
+                      this._toggleMapOptionsExpanded('currentwildfire')
                     }
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysCurrentWildfireExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'currentwildfire'
+                    }
                   >
                     <Checkbox
                       label="Enabled"
@@ -480,14 +489,18 @@ class Map extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysNationalParksExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'nationalparks'
+                    }
                     content="National Parks"
                     onClick={() =>
-                      this._toggleState('dataOverlaysNationalParksExpanded')
+                      this._toggleMapOptionsExpanded('nationalparks')
                     }
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysNationalParksExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'nationalparks'
+                    }
                   >
                     <Checkbox
                       label="Enabled"
@@ -506,14 +519,16 @@ class Map extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysSlopeAngleExpanded}
-                    content="Slope Angle Shading"
-                    onClick={() =>
-                      this._toggleState('dataOverlaysSlopeAngleExpanded')
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'slopeangle'
                     }
+                    content="Slope Angle Shading"
+                    onClick={() => this._toggleMapOptionsExpanded('slopeangle')}
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysSlopeAngleExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'slopeangle'
+                    }
                   >
                     <Checkbox
                       label="Enabled"
@@ -535,14 +550,16 @@ class Map extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                   <Accordion.Title
-                    active={this.state.dataOverlaysMapUnitsExpanded}
-                    content="Map Units"
-                    onClick={() =>
-                      this._toggleState('dataOverlaysMapUnitsExpanded')
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'mapunits'
                     }
+                    content="Map Units"
+                    onClick={() => this._toggleMapOptionsExpanded('mapunits')}
                   />
                   <Accordion.Content
-                    active={this.state.dataOverlaysMapUnitsExpanded}
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'mapunits'
+                    }
                   >
                     <Button.Group compact>
                       <Button
