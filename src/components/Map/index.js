@@ -87,6 +87,7 @@ class Map extends React.Component {
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
+          useMetric={this.state.mapUnitsMetric}
         />
       );
     }

@@ -21,7 +21,7 @@ export function NationalParkLayer(props) {
         id="nationalpark_fill"
         beforeId={beforeId}
         type="fill"
-        source-layer="nationalpark"
+        source-layer="nationalparks"
         paint={{
           'fill-opacity': opacity,
           'fill-color': 'rgb(115, 77, 38)',

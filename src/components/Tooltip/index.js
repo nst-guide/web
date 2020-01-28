@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Accordion } from 'semantic-ui-react';
 import Image from '../Image';
 
 function TooltipDiv(props) {
@@ -91,9 +91,10 @@ export function CurrentWildfireTooltip(props) {
             )}
             <p>
               Fire boundaries may not be current.{' '}
-              <a href="https://www.pcta.org/discover-the-trail/backcountry-basics/fire/">
+              {/* Commented out because can't click on link */}
+              {/* <a href="https://www.pcta.org/discover-the-trail/backcountry-basics/fire/">
                 Read more about wildfires on the Pacific Crest Trail.
-              </a>
+              </a> */}
             </p>
           </Card.Description>
         </Card.Content>
@@ -103,13 +104,49 @@ export function CurrentWildfireTooltip(props) {
 }
 
 export function NationalParkTooltip(props) {
-  const { object, pointerX, pointerY } = props || {};
+  const { object, pointerX, pointerY, useMetric=false } = props || {};
+
+  let trailLength;
+  if (object && object.properties && object.properties.length) {
+    const trailMeters = object.properties.length;
+    if (useMetric) {
+      const trailKM = Math.round(trailMeters / 1000);
+      trailLength = `${trailKM} trail kilometers`
+    }
+    else {
+      const trailMiles = Math.round(trailMeters / 1609.34);
+      trailLength = `${trailMiles} trail miles`;
+    }
+  }
+
+  let description;
+  if (object && object.properties && object.properties.description) {
+    description = object.properties.description;
+  }
+
+  const panels = [];
+  if (object && object.properties && object.properties.weatherInfo) {
+    panels.push({
+      key: 'weather',
+      title: 'General Weather',
+      content: object.properties.weatherInfo,
+    });
+  }
+  if (object && object.properties && object.properties.directionsInfo) {
+    panels.push({
+      key: 'directions',
+      title: 'Driving Directions',
+      content: object.properties.directionsInfo,
+    });
+  }
   return (
-    <TooltipDiv x={pointerX} y={pointerY} width="200px">
+    <TooltipDiv x={pointerX} y={pointerY} width="280px">
       <Card>
         <Card.Content>
-          <Card.Header>{object.properties.UNIT_NAME}</Card.Header>
-          <Card.Description></Card.Description>
+          <Card.Header>{object.properties.fullName}</Card.Header>
+          {trailLength && <Card.Meta>{trailLength}</Card.Meta>}
+          {description && <Card.Description>{description}</Card.Description>}
+          <Accordion panels={panels} />
         </Card.Content>
       </Card>
     </TooltipDiv>
