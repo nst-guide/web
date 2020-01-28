@@ -2,9 +2,16 @@ import * as React from 'react';
 import { Card, Accordion, Label } from 'semantic-ui-react';
 import Image from '../Image';
 
+function TooltipPin() {
+  return <Label corner="right" icon="pin" color="black" />;
+}
+
 function TooltipDiv(props) {
   const { x, y, width = '70%', maxWidth = '600px', pinned = false } = props;
 
+  // Setting pointerEvents based on the state of `pinned` is necessary because
+  // otherwise I was getting flickering from the pointerEvent of the div
+  // conflicting with the pointerEvent of the Deck Map
   return (
     <div
       style={{
@@ -43,7 +50,7 @@ export function PhotoTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="70%" pinned={pinned}>
       <Card style={{ width: '100%' }}>
-        {pinned && <Label corner="right" icon="pin" />}
+        {pinned && <TooltipPin/>}
         <Image
           alt={object.properties.description || 'Image'}
           filename={`photos/${object.id}.jpeg`}
@@ -71,7 +78,7 @@ export function CurrentWildfireTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="200px" pinned={pinned}>
       <Card>
-        {pinned && <Label corner="right" icon="pin" />}
+        {pinned && <TooltipPin/>}
         <Card.Content>
           {object && object.properties && object.properties.IncidentNa && (
             <Card.Header>
@@ -150,7 +157,7 @@ export function NationalParkTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
       <Card>
-        {pinned && <Label corner="right" icon="pin" />}
+        {pinned && <TooltipPin/>}
         <Card.Content>
           <Card.Header>
             <a
