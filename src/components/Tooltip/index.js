@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, Accordion, Label } from 'semantic-ui-react';
+import { Card, Accordion, Label, Image as SemanticImage } from 'semantic-ui-react';
 import Image from '../Image';
 
 function TooltipPin() {
@@ -50,7 +50,7 @@ export function PhotoTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="70%" pinned={pinned}>
       <Card style={{ width: '100%' }}>
-        {pinned && <TooltipPin/>}
+        {pinned && <TooltipPin />}
         <Image
           alt={object.properties.description || 'Image'}
           filename={`photos/${object.id}.jpeg`}
@@ -78,7 +78,7 @@ export function CurrentWildfireTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="200px" pinned={pinned}>
       <Card>
-        {pinned && <TooltipPin/>}
+        {pinned && <TooltipPin />}
         <Card.Content>
           {object && object.properties && object.properties.IncidentNa && (
             <Card.Header>
@@ -157,7 +157,7 @@ export function NationalParkTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
       <Card>
-        {pinned && <TooltipPin/>}
+        {pinned && <TooltipPin />}
         <Card.Content>
           <Card.Header>
             <a
@@ -170,6 +170,46 @@ export function NationalParkTooltip(props) {
           </Card.Header>
           {trailLength && <Card.Meta>{trailLength}</Card.Meta>}
           <Accordion defaultActiveIndex={0} panels={panels} />
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
+  );
+}
+
+export function WikipediaTooltip(props) {
+  const { object, pointerX, pointerY, pinned = false } = props || {};
+
+  console.log(object);
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} width="280px" pinned={pinned}>
+      <Card>
+        {pinned && <TooltipPin />}
+        <SemanticImage
+          alt={object.properties.images[0] || 'Image'}
+          src={object.properties.images[0]}
+        />
+        <Card.Content>
+          {object && object.properties && object.properties.title && (
+            <Card.Header>
+              <a
+                href={object.properties.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {object.properties.title}
+              </a>
+            </Card.Header>
+          )}
+          {object && object.properties && object.properties.DateCurren && (
+            <Card.Meta>
+              <span className="date">
+                Updated {humanReadableDate(object.properties.DateCurren)}{' '}
+              </span>
+            </Card.Meta>
+          )}
+          {object && object.properties && object.properties.summary && (
+            <Card.Description>{object.properties.summary}</Card.Description>
+          )}
         </Card.Content>
       </Card>
     </TooltipDiv>

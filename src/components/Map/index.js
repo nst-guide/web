@@ -31,6 +31,7 @@ import {
   CurrentWildfireTooltip,
   NationalParkTooltip,
   PhotoTooltip,
+  WikipediaTooltip,
 } from '../Tooltip';
 
 // You'll get obscure errors without including the Mapbox GL CSS
@@ -47,26 +48,22 @@ class Map extends React.Component {
     mapUnitsMetric: false,
     dataOverlaysExpanded: false,
     dataOverlaysExpandedSection: null,
-    layerPhotosVisible: true,
+    layerPhotosVisible: false,
     layerPhotosShowAll: false,
     layerAirQualityVisible: false,
     layerAirQualityOpacity: 0.05,
-    layerCurrentWildfireVisible: true,
+    layerCurrentWildfireVisible: false,
     layerCurrentWildfireOpacity: 0.5,
     layerNationalParksVisible: false,
     layerNationalParksOpacity: 0.3,
-    layerSlopeAngleVisible: true,
+    layerSlopeAngleVisible: false,
     layerSlopeAngleOpacity: 0.3,
+    layerWikipediaVisible: false,
   };
 
   _renderTooltip() {
-    const {
-      pinnedTooltip,
-      pickedObject,
-      pickedLayer,
-      pointerX,
-      pointerY,
-    } = this.state || {};
+    const { pinnedTooltip, pickedObject, pickedLayer, pointerX, pointerY } =
+      this.state || {};
 
     if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
       return (
@@ -99,6 +96,16 @@ class Map extends React.Component {
         />
       );
     }
+    if (pickedObject && pickedLayer && pickedLayer.id === 'wikipedia') {
+      return (
+        <WikipediaTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          pinned={pinnedTooltip}
+        />
+      );
+    }
   }
 
   // Called on click by deck.gl
@@ -126,6 +133,7 @@ class Map extends React.Component {
     // to query any desired layers rendered there.
     // Make sure you create the ref on InteractiveMap or StaticMap
     // Without an options parameter, checks all layers rendered by React Map GL
+    if (!this.map) return;
     const hitbox = 10;
     const features = this.map.queryRenderedFeatures([
       [x - hitbox, y - hitbox],
@@ -244,7 +252,29 @@ class Map extends React.Component {
       visible: this.state.layerCurrentWildfireVisible,
     });
 
-    const layers = [airQualityLayer, photosLayer, currentWildfire];
+    const wikipediaLayer = new GeoJsonLayer({
+      id: 'wikipedia',
+      data: 'https://tiles.nst.guide/pct/wikipedia.geojson',
+
+      filled: true,
+      stroked: true,
+      pointRadiusMinPixels: 5,
+      pointRadiusScale: 1,
+      getRadius: f => 15,
+      getFillColor: [0, 0, 0, 200],
+      // Interactive props
+      pickable: true,
+      autoHighlight: true,
+      // Visiblility based on state
+      visible: this.state.layerWikipediaVisible,
+    });
+
+    const layers = [
+      airQualityLayer,
+      photosLayer,
+      currentWildfire,
+      wikipediaLayer,
+    ];
 
     return (
       <div ref={ref => (this.deckDiv = ref)}>
@@ -497,6 +527,30 @@ class Map extends React.Component {
                       onChange={this._onChangeOpacity}
                     />
                     <SlopeAngleLegend />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'wikipedia'
+                    }
+                    content="Wikipedia"
+                    index={0}
+                    onClick={() => this._toggleMapOptionsExpanded('wikipedia')}
+                  />
+                  <Accordion.Content
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'wikipedia'
+                    }
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this._toggleState('layerWikipediaVisible')
+                      }
+                      checked={this.state.layerWikipediaVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
                   </Accordion.Content>
                 </Menu.Item>
                 <Menu.Item>
