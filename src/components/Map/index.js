@@ -387,7 +387,7 @@ class Map extends React.Component {
                 <Menu.Item>
                   <Accordion.Title
                     active={this.state.dataOverlaysExpandedSection === 'photos'}
-                    content="Photos"
+                    content="Photography"
                     index={0}
                     onClick={() => this._toggleMapOptionsExpanded('photos')}
                   />
