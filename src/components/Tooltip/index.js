@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Card, Accordion } from 'semantic-ui-react';
+import { Card, Accordion, Label } from 'semantic-ui-react';
 import Image from '../Image';
 
 function TooltipDiv(props) {
-  const { x, y, width = '70%', maxWidth = '600px' } = props;
+  const { x, y, width = '70%', maxWidth = '600px', pinned = false } = props;
+
   return (
     <div
       style={{
         position: 'absolute',
         zIndex: 3,
-        pointerEvents: 'none',
+        pointerEvents: pinned ? 'auto' : 'none',
         left:
           x <= window.innerWidth / 2
             ? Math.min(window.innerWidth * 0.3, x)
@@ -37,11 +38,12 @@ function TooltipDiv(props) {
 }
 
 export function PhotoTooltip(props) {
-  const { object, pointerX, pointerY } = props || {};
+  const { object, pointerX, pointerY, pinned = 'none' } = props || {};
 
   return (
-    <TooltipDiv x={pointerX} y={pointerY} width="70%">
+    <TooltipDiv x={pointerX} y={pointerY} width="70%" pinned={pinned}>
       <Card style={{ width: '100%' }}>
+        {pinned && <Label corner="right" icon="pin" />}
         <Image
           alt={object.properties.description || 'Image'}
           filename={`photos/${object.id}.jpeg`}
@@ -64,11 +66,12 @@ export function PhotoTooltip(props) {
 }
 
 export function CurrentWildfireTooltip(props) {
-  const { object, pointerX, pointerY } = props || {};
+  const { object, pointerX, pointerY, pinned = false } = props || {};
 
   return (
-    <TooltipDiv x={pointerX} y={pointerY} width="200px">
+    <TooltipDiv x={pointerX} y={pointerY} width="200px" pinned={pinned}>
       <Card>
+        {pinned && <Label corner="right" icon="pin" />}
         <Card.Content>
           {object && object.properties && object.properties.IncidentNa && (
             <Card.Header>
@@ -91,10 +94,13 @@ export function CurrentWildfireTooltip(props) {
             )}
             <p>
               Fire boundaries may not be current.{' '}
-              {/* Commented out because can't click on link */}
-              {/* <a href="https://www.pcta.org/discover-the-trail/backcountry-basics/fire/">
+              <a
+                href="https://www.pcta.org/discover-the-trail/backcountry-basics/fire/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Read more about wildfires on the Pacific Crest Trail.
-              </a> */}
+              </a>
             </p>
           </Card.Description>
         </Card.Content>
@@ -104,27 +110,29 @@ export function CurrentWildfireTooltip(props) {
 }
 
 export function NationalParkTooltip(props) {
-  const { object, pointerX, pointerY, useMetric=false } = props || {};
+  const { object, pointerX, pointerY, pinned = false, useMetric = false } =
+    props || {};
 
   let trailLength;
   if (object && object.properties && object.properties.length) {
     const trailMeters = object.properties.length;
     if (useMetric) {
       const trailKM = Math.round(trailMeters / 1000);
-      trailLength = `${trailKM} trail kilometers`
-    }
-    else {
+      trailLength = `${trailKM} trail kilometers`;
+    } else {
       const trailMiles = Math.round(trailMeters / 1609.34);
       trailLength = `${trailMiles} trail miles`;
     }
   }
 
-  let description;
-  if (object && object.properties && object.properties.description) {
-    description = object.properties.description;
-  }
-
   const panels = [];
+  if (object && object.properties && object.properties.description) {
+    panels.push({
+      key: 'description',
+      title: 'Overview',
+      content: object.properties.description,
+    });
+  }
   if (object && object.properties && object.properties.weatherInfo) {
     panels.push({
       key: 'weather',
@@ -140,13 +148,21 @@ export function NationalParkTooltip(props) {
     });
   }
   return (
-    <TooltipDiv x={pointerX} y={pointerY} width="280px">
+    <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
       <Card>
+        {pinned && <Label corner="right" icon="pin" />}
         <Card.Content>
-          <Card.Header>{object.properties.fullName}</Card.Header>
+          <Card.Header>
+            <a
+              href={object.properties.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {object.properties.fullName}
+            </a>
+          </Card.Header>
           {trailLength && <Card.Meta>{trailLength}</Card.Meta>}
-          {description && <Card.Description>{description}</Card.Description>}
-          <Accordion panels={panels} />
+          <Accordion defaultActiveIndex={0} panels={panels} />
         </Card.Content>
       </Card>
     </TooltipDiv>

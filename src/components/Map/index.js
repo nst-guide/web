@@ -39,6 +39,7 @@ import '../../css/mapbox-gl.css';
 class Map extends React.Component {
   state = {
     mapStyle: mapStyles[0],
+    pinnedTooltip: false,
     pickedObject: null,
     pickedLayer: null,
     pointerX: null,
@@ -59,9 +60,13 @@ class Map extends React.Component {
   };
 
   _renderTooltip() {
-    const { pickedObject, pickedLayer, pointerX, pointerY } = this.state || {};
-
-    if (!pickedObject) return;
+    const {
+      pinnedTooltip,
+      pickedObject,
+      pickedLayer,
+      pointerX,
+      pointerY,
+    } = this.state || {};
 
     if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
       return (
@@ -69,6 +74,7 @@ class Map extends React.Component {
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
+          pinned={pinnedTooltip}
         />
       );
     }
@@ -78,6 +84,7 @@ class Map extends React.Component {
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
+          pinned={pinnedTooltip}
         />
       );
     }
@@ -88,6 +95,7 @@ class Map extends React.Component {
           pointerX={pointerX}
           pointerY={pointerY}
           useMetric={this.state.mapUnitsMetric}
+          pinned={pinnedTooltip}
         />
       );
     }
@@ -97,12 +105,15 @@ class Map extends React.Component {
   // event.x, event.y are the clicked x and y coordinates in pixels
   // If the deck.gl picking engine finds something, the `object` , `color` and
   // `layer` attributes will be non-null
-  _onClick = event => {
+  _updatePicked = (event, source) => {
     const { x, y, object, layer } = event;
 
     // If object and layer both exist, then deck.gl found an object, and I
     // won't query for the Mapbox layers underneath
     if (object && layer) {
+      if (source === 'click') {
+        this._toggleState('pinnedTooltip');
+      }
       return this.setState({
         pickedObject: object,
         pickedLayer: layer,
@@ -126,6 +137,9 @@ class Map extends React.Component {
       interactiveLayerIds.includes(feature.layer.id),
     );
     if (pickedFeature) {
+      if (source === 'click') {
+        this._toggleState('pinnedTooltip');
+      }
       return this.setState({
         pickedObject: pickedFeature,
         pickedLayer: pickedFeature.layer,
@@ -136,8 +150,22 @@ class Map extends React.Component {
 
     this.setState({
       pickedObject: null,
+      pinnedTooltip: false,
     });
     return;
+  };
+
+  _onClick = event => {
+    this._updatePicked(event, 'click');
+  };
+
+  _onHover = event => {
+    // If the tooltip is pinned, don't update picked state
+    if (this.state.pinnedTooltip) {
+      return;
+    }
+
+    this._updatePicked(event, 'hover');
   };
 
   _onChangeOpacity = (e, { name, value }) => {
@@ -175,9 +203,6 @@ class Map extends React.Component {
       // Interactive props
       pickable: true,
       autoHighlight: true,
-      onClick: this._onClick,
-      // Update app state
-      onHover: this._onClick,
       // Visiblility based on state
       visible: this.state.layerPhotosVisible,
 
@@ -216,8 +241,6 @@ class Map extends React.Component {
       // Interactive props
       pickable: true,
       autoHighlight: true,
-      onClick: this._onClick,
-      onHover: this._onClick,
       visible: this.state.layerCurrentWildfireVisible,
     });
 
@@ -237,7 +260,7 @@ class Map extends React.Component {
           layers={layers}
           ContextProvider={MapContext.Provider}
           onClick={this._onClick}
-          onHover={this._onClick}
+          onHover={this._onHover}
           pickingRadius={10}
         >
           <InteractiveMap
