@@ -202,14 +202,14 @@ export function NationalParkTooltip(props) {
                   {trailLength && trailLength}
                   {'  '}
                   {object.properties.url && (
-            <a
-              href={object.properties.url}
-              target="_blank"
-              rel="noopener noreferrer"
+                    <a
+                      href={object.properties.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       title="Official website"
-            >
+                    >
                       <Icon link name="globe" />
-            </a>
+                    </a>
                   )}
                   {object.properties.wiki_url && (
                     <a
