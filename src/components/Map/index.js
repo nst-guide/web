@@ -68,7 +68,7 @@ class Map extends React.Component {
     // Sometimes pointerX and pointerY will get set to -1 when the pointer is
     // over the map options div
     if (pointerX === -1 || pointerY === -1) {
-      return
+      return;
     }
 
     if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
@@ -78,6 +78,9 @@ class Map extends React.Component {
           pointerX={pointerX}
           pointerY={pointerY}
           pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
         />
       );
     }
@@ -88,6 +91,9 @@ class Map extends React.Component {
           pointerX={pointerX}
           pointerY={pointerY}
           pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
         />
       );
     }
@@ -99,6 +105,9 @@ class Map extends React.Component {
           pointerY={pointerY}
           useMetric={this.state.mapUnitsMetric}
           pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
         />
       );
     }
@@ -109,6 +118,9 @@ class Map extends React.Component {
           pointerX={pointerX}
           pointerY={pointerY}
           pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
         />
       );
     }

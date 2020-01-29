@@ -9,8 +9,9 @@ import {
 } from 'semantic-ui-react';
 import Image from '../Image';
 
-function TooltipPin() {
-  return <Label corner="right" icon="pin" color="black" />;
+function TooltipPin(props) {
+  const { onClick = null } = props;
+  return <Label corner="right" icon="x" color="black" onClick={onClick} />;
 }
 
 function TooltipDiv(props) {
@@ -52,12 +53,13 @@ function TooltipDiv(props) {
 }
 
 export function PhotoTooltip(props) {
-  const { object, pointerX, pointerY, pinned = 'none' } = props || {};
+  const { object, pointerX, pointerY, pinned = 'none', onCornerClick = null } =
+    props || {};
 
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="70%" pinned={pinned}>
       <Card style={{ width: '100%' }}>
-        {pinned && <TooltipPin />}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
         <Image
           alt={object.properties.description || 'Image'}
           filename={`photos/${object.id}.jpeg`}
@@ -80,12 +82,13 @@ export function PhotoTooltip(props) {
 }
 
 export function CurrentWildfireTooltip(props) {
-  const { object, pointerX, pointerY, pinned = false } = props || {};
+  const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
+    props || {};
 
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="200px" pinned={pinned}>
       <Card>
-        {pinned && <TooltipPin />}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
         <Card.Content>
           {object && object.properties && object.properties.IncidentNa && (
             <Card.Header>
@@ -124,8 +127,14 @@ export function CurrentWildfireTooltip(props) {
 }
 
 export function NationalParkTooltip(props) {
-  const { object, pointerX, pointerY, pinned = false, useMetric = false } =
-    props || {};
+  const {
+    object,
+    pointerX,
+    pointerY,
+    pinned = false,
+    useMetric = false,
+    onCornerClick = null,
+  } = props || {};
 
   let trailLength;
   if (object && object.properties && object.properties.length) {
@@ -172,7 +181,7 @@ export function NationalParkTooltip(props) {
         {image && (
           <SemanticImage alt={image.altText || 'Image'} src={image.url} />
         )}
-        {pinned && <TooltipPin />}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
         <Card.Content>
           <Card.Header>
             <a
@@ -210,13 +219,14 @@ export function NationalParkTooltip(props) {
 }
 
 export function WikipediaTooltip(props) {
-  const { object, pointerX, pointerY, pinned = false } = props || {};
+  const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
+    props || {};
 
   console.log(object);
   return (
     <TooltipDiv x={pointerX} y={pointerY} width="280px" pinned={pinned}>
       <Card>
-        {pinned && <TooltipPin />}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
         <SemanticImage
           alt={object.properties.images[0] || 'Image'}
           src={object.properties.images[0]}
