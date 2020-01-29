@@ -39,6 +39,8 @@ import {
 // You'll get obscure errors without including the Mapbox GL CSS
 import '../../css/mapbox-gl.css';
 
+const pickingRadius = 5;
+
 class Map extends React.Component {
   state = {
     mapStyle: mapStyles[0],
@@ -174,10 +176,9 @@ class Map extends React.Component {
     // Make sure you create the ref on InteractiveMap or StaticMap
     // Without an options parameter, checks all layers rendered by React Map GL
     if (!this.map) return;
-    const hitbox = 10;
     const features = this.map.queryRenderedFeatures([
-      [x - hitbox, y - hitbox],
-      [x + hitbox, y + hitbox],
+      [x - pickingRadius, y - pickingRadius],
+      [x + pickingRadius, y + pickingRadius],
     ]);
 
     // Find the first feature where the layer id is in interactiveLayerIDs
@@ -331,7 +332,7 @@ class Map extends React.Component {
           ContextProvider={MapContext.Provider}
           onClick={this._onClick}
           onHover={this._onHover}
-          pickingRadius={10}
+          pickingRadius={pickingRadius}
         >
           <InteractiveMap
             ref={ref => {
