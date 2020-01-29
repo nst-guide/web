@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Card, Accordion, Label, Image as SemanticImage } from 'semantic-ui-react';
+import {
+  Card,
+  Accordion,
+  Label,
+  Icon,
+  Grid,
+  Image as SemanticImage,
+} from 'semantic-ui-react';
 import Image from '../Image';
 
 function TooltipPin() {
@@ -163,10 +170,7 @@ export function NationalParkTooltip(props) {
     <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
       <Card>
         {image && (
-          <SemanticImage
-            alt={image.altText || 'Image'}
-            src={image.url}
-          />
+          <SemanticImage alt={image.altText || 'Image'} src={image.url} />
         )}
         {pinned && <TooltipPin />}
         <Card.Content>
@@ -179,7 +183,25 @@ export function NationalParkTooltip(props) {
               {object.properties.fullName}
             </a>
           </Card.Header>
-          {trailLength && <Card.Meta>{trailLength}</Card.Meta>}
+          <Card.Meta>
+            <Grid columns={1}>
+              <Grid.Row>
+                <Grid.Column>{trailLength && trailLength}</Grid.Column>
+                <Grid.Column>
+                  {object.properties.wiki_url && (
+                    <a
+                      href={object.properties.wiki_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Wikipedia Page"
+                    >
+                      <Icon link name="wikipedia w" />
+                    </a>
+                  )}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Card.Meta>
           <Accordion defaultActiveIndex={0} panels={panels} />
         </Card.Content>
       </Card>
