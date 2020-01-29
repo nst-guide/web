@@ -132,6 +132,11 @@ export function NationalParkTooltip(props) {
     }
   }
 
+  let image;
+  if (object && object.properties && object.properties.images) {
+    image = JSON.parse(object.properties.images)[0];
+  }
+
   const panels = [];
   if (object && object.properties && object.properties.description) {
     panels.push({
@@ -157,6 +162,12 @@ export function NationalParkTooltip(props) {
   return (
     <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
       <Card>
+        {image && (
+          <SemanticImage
+            alt={image.altText || 'Image'}
+            src={image.url}
+          />
+        )}
         {pinned && <TooltipPin />}
         <Card.Content>
           <Card.Header>
