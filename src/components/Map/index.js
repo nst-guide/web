@@ -65,6 +65,12 @@ class Map extends React.Component {
     const { pinnedTooltip, pickedObject, pickedLayer, pointerX, pointerY } =
       this.state || {};
 
+    // Sometimes pointerX and pointerY will get set to -1 when the pointer is
+    // over the map options div
+    if (pointerX === -1 || pointerY === -1) {
+      return
+    }
+
     if (pickedObject && pickedLayer && pickedLayer.id === 'photos') {
       return (
         <PhotoTooltip
