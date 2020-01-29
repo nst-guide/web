@@ -389,8 +389,8 @@ export function WikipediaTooltip(props) {
       <Card>
         {pinned && <TooltipPin onClick={onCornerClick} />}
         <SemanticImage
-          alt={object.properties.images[0] || 'Image'}
-          src={object.properties.images[0]}
+          alt={object.properties.best_image || 'Image'}
+          src={object.properties.best_image}
         />
         <Card.Content>
           {object && object.properties && object.properties.title && (
