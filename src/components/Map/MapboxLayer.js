@@ -7,6 +7,7 @@ export const interactiveLayerIds = [
   // React map gl layers:
   'nationalpark_fill',
   'nationalforest_fill',
+  'wildfire_historical_fill',
   // Basemap layers:
 ];
 
@@ -65,6 +66,45 @@ export function NationalForestLayer(props) {
         paint={{
           'line-opacity': Math.min(opacity + .1, 1),
           'line-color': 'hsl(59, 100%, 0%)',
+          'line-width': 1,
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+    </Source>
+  );
+}
+
+export function HistoricalWildfireLayer(props) {
+  const { beforeId, opacity, visible } = props;
+  return (
+    <Source
+      id="wildfire_historical"
+      type="vector"
+      url="https://tiles.nst.guide/pct/wildfire_historical/tile.json"
+    >
+      <Layer
+        id="wildfire_historical_fill"
+        beforeId={beforeId}
+        type="fill"
+        source-layer="wildfire_historical"
+        paint={{
+          'fill-opacity': opacity,
+          'fill-color': 'hsl(7, 100%, 30%)',
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="wildfire_historical_outline"
+        beforeId={beforeId}
+        type="line"
+        source-layer="wildfire_historical"
+        paint={{
+          'line-opacity': Math.min(opacity + 0.1, 1),
+          'line-color': 'hsl(7, 100%, 30%)',
           'line-width': 1,
         }}
         layout={{

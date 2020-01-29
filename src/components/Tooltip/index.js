@@ -305,6 +305,81 @@ export function NationalForestTooltip(props) {
   );
 }
 
+export function HistoricalWildfireTooltip(props) {
+  const {
+    object,
+    pointerX,
+    pointerY,
+    pinned = false,
+    useMetric = false,
+    onCornerClick = null,
+  } = props || {};
+
+  let trailLength;
+  if (object && object.properties && object.properties.length) {
+    const trailMeters = object.properties.length;
+    if (useMetric) {
+      const trailKM = Math.round(trailMeters / 1000);
+      trailLength = `${trailKM} trail kilometers`;
+    } else {
+      const trailMiles = Math.round(trailMeters / 1609.34);
+      trailLength = `${trailMiles} trail miles`;
+    }
+  }
+
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
+      <Card>
+        {object.properties.wiki_image && (
+          <SemanticImage alt="Image" src={object.properties.wiki_image} />
+        )}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
+        <Card.Content>
+          <Card.Header>{object.properties.name} Fire </Card.Header>
+          <Card.Meta>
+            <Grid columns={1}>
+              <Grid.Row>
+                {object.properties.year && (
+                  <Grid.Column>{object.properties.year}</Grid.Column>
+                )}
+                <Grid.Column>
+                  {trailLength && trailLength}
+                  {'  '}
+                  {object.properties.inciwebid && (
+                    <a
+                      href={`https://inciweb.nwcg.gov/incident/${object.properties.inciwebid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Official website"
+                    >
+                      <Icon link name="globe" />
+                    </a>
+                  )}
+                  {object.properties.wiki_url && (
+                    <a
+                      href={object.properties.wiki_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Wikipedia Page"
+                    >
+                      <Icon link name="wikipedia w" />
+                    </a>
+                  )}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Card.Meta>
+          {object.properties.wiki_summary && (
+            <Card.Description>
+              {object.properties.wiki_summary}
+            </Card.Description>
+          )}
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
+  );
+}
+
 export function WikipediaTooltip(props) {
   const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
     props || {};

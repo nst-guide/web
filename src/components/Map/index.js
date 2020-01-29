@@ -24,6 +24,7 @@ import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
 import {
   NationalParkLayer,
   NationalForestLayer,
+  HistoricalWildfireLayer,
   SlopeAngleLayer,
   PCTTrailLayer,
   interactiveLayerIds,
@@ -32,6 +33,7 @@ import {
   CurrentWildfireTooltip,
   NationalParkTooltip,
   NationalForestTooltip,
+  HistoricalWildfireTooltip,
   PhotoTooltip,
   WikipediaTooltip,
 } from '../Tooltip';
@@ -62,6 +64,8 @@ class Map extends React.Component {
     layerNationalParksOpacity: 0.3,
     layerNationalForestsVisible: false,
     layerNationalForestsOpacity: 0.3,
+    layerHistoricalWildfireVisible: true,
+    layerHistoricalWildfireOpacity: 0.3,
     layerSlopeAngleVisible: false,
     layerSlopeAngleOpacity: 0.3,
     layerWikipediaVisible: false,
@@ -124,6 +128,24 @@ class Map extends React.Component {
     ) {
       return (
         <NationalForestTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          useMetric={this.state.mapUnitsMetric}
+          pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
+        />
+      );
+    }
+    if (
+      pickedObject &&
+      pickedLayer &&
+      pickedLayer.id === 'wildfire_historical_fill'
+    ) {
+      return (
+        <HistoricalWildfireTooltip
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
@@ -357,6 +379,14 @@ class Map extends React.Component {
               opacity={this.state.layerNationalForestsOpacity}
               visible={this.state.layerNationalForestsVisible}
             />
+            <HistoricalWildfireLayer
+              beforeId={beforeId({
+                layerType: 'raster',
+                mapStyle: mapStyle.id,
+              })}
+              opacity={this.state.layerHistoricalWildfireOpacity}
+              visible={this.state.layerHistoricalWildfireVisible}
+            />
             <SlopeAngleLayer
               beforeId={beforeId({
                 layerType: 'raster',
@@ -516,6 +546,38 @@ class Map extends React.Component {
                     <OpacitySlider
                       name="layerCurrentWildfireOpacity"
                       value={this.state.layerCurrentWildfireOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'wildfire_historical'
+                    }
+                    content="Historical Wildfires"
+                    onClick={() =>
+                      this._toggleMapOptionsExpanded('wildfire_historical')
+                    }
+                  />
+                  <Accordion.Content
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'wildfire_historical'
+                    }
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this._toggleState('layerHistoricalWildfireVisible')
+                      }
+                      checked={this.state.layerHistoricalWildfireVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerHistoricalWildfireOpacity"
+                      value={this.state.layerHistoricalWildfireOpacity}
                       onChange={this._onChangeOpacity}
                     />
                   </Accordion.Content>
