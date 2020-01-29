@@ -23,6 +23,7 @@ import { OpacitySlider } from './OpacitySlider';
 import { SlopeAngleLegend, AirQualityLegend } from '../Legend';
 import {
   NationalParkLayer,
+  NationalForestLayer,
   SlopeAngleLayer,
   PCTTrailLayer,
   interactiveLayerIds,
@@ -30,6 +31,7 @@ import {
 import {
   CurrentWildfireTooltip,
   NationalParkTooltip,
+  NationalForestTooltip,
   PhotoTooltip,
   WikipediaTooltip,
 } from '../Tooltip';
@@ -56,6 +58,8 @@ class Map extends React.Component {
     layerCurrentWildfireOpacity: 0.5,
     layerNationalParksVisible: false,
     layerNationalParksOpacity: 0.3,
+    layerNationalForestsVisible: false,
+    layerNationalForestsOpacity: 0.3,
     layerSlopeAngleVisible: false,
     layerSlopeAngleOpacity: 0.3,
     layerWikipediaVisible: false,
@@ -100,6 +104,24 @@ class Map extends React.Component {
     if (pickedObject && pickedLayer && pickedLayer.id === 'nationalpark_fill') {
       return (
         <NationalParkTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          useMetric={this.state.mapUnitsMetric}
+          pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
+        />
+      );
+    }
+    if (
+      pickedObject &&
+      pickedLayer &&
+      pickedLayer.id === 'nationalforest_fill'
+    ) {
+      return (
+        <NationalForestTooltip
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
@@ -326,6 +348,14 @@ class Map extends React.Component {
               opacity={this.state.layerNationalParksOpacity}
               visible={this.state.layerNationalParksVisible}
             />
+            <NationalForestLayer
+              beforeId={beforeId({
+                layerType: 'raster',
+                mapStyle: mapStyle.id,
+              })}
+              opacity={this.state.layerNationalForestsOpacity}
+              visible={this.state.layerNationalForestsVisible}
+            />
             <SlopeAngleLayer
               beforeId={beforeId({
                 layerType: 'raster',
@@ -515,6 +545,38 @@ class Map extends React.Component {
                     <OpacitySlider
                       name="layerNationalParksOpacity"
                       value={this.state.layerNationalParksOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'nationalforests'
+                    }
+                    content="National Forests"
+                    onClick={() =>
+                      this._toggleMapOptionsExpanded('nationalforests')
+                    }
+                  />
+                  <Accordion.Content
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'nationalforests'
+                    }
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this._toggleState('layerNationalForestsVisible')
+                      }
+                      checked={this.state.layerNationalForestsVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerNationalForestsOpacity"
+                      value={this.state.layerNationalForestsOpacity}
                       onChange={this._onChangeOpacity}
                     />
                   </Accordion.Content>

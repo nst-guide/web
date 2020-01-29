@@ -6,6 +6,7 @@ import { Source, Layer } from 'react-map-gl';
 export const interactiveLayerIds = [
   // React map gl layers:
   'nationalpark_fill',
+  'nationalforest_fill',
   // Basemap layers:
 ];
 
@@ -25,6 +26,46 @@ export function NationalParkLayer(props) {
         paint={{
           'fill-opacity': opacity,
           'fill-color': 'rgb(115, 77, 38)',
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+    </Source>
+  );
+}
+
+export function NationalForestLayer(props) {
+  const { beforeId, opacity, visible } = props;
+  return (
+    <Source
+      id="nationalforest"
+      type="vector"
+      url="https://tiles.nst.guide/pct/nationalforest/tile.json"
+    >
+      <Layer
+        id="nationalforest_fill"
+        beforeId={beforeId}
+        type="fill"
+        source-layer="nationalforests"
+        paint={{
+          'fill-opacity': opacity,
+          'fill-color': 'hsl(59, 100%, 40%)',
+          // 'fill-outline-color': 'hsl(59, 100%, 0%)',
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="nationalforest_outline"
+        beforeId={beforeId}
+        type="line"
+        source-layer="nationalforests"
+        paint={{
+          'line-opacity': Math.min(opacity + .1, 1),
+          'line-color': 'hsl(59, 100%, 0%)',
+          'line-width': 1,
         }}
         layout={{
           visibility: visible ? 'visible' : 'none',
