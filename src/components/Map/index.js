@@ -555,7 +555,6 @@ class Map extends React.Component {
                         this._toggleState('layerWikipediaVisible')
                       }
                       checked={this.state.layerWikipediaVisible}
-                      style={{ paddingBottom: 10 }}
                     />
                   </Accordion.Content>
                 </Menu.Item>
