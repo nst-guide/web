@@ -194,20 +194,23 @@ export function NationalParkTooltip(props) {
         )}
         {pinned && <TooltipPin onClick={onCornerClick} />}
         <Card.Content>
-          <Card.Header>
+          <Card.Header>{object.properties.fullName}</Card.Header>
+          <Card.Meta>
+            <Grid columns={1}>
+              <Grid.Row>
+                <Grid.Column>
+                  {trailLength && trailLength}
+                  {'  '}
+                  {object.properties.url && (
             <a
               href={object.properties.url}
               target="_blank"
               rel="noopener noreferrer"
+                      title="Official website"
             >
-              {object.properties.fullName}
+                      <Icon link name="globe" />
             </a>
-          </Card.Header>
-          <Card.Meta>
-            <Grid columns={1}>
-              <Grid.Row>
-                <Grid.Column>{trailLength && trailLength}</Grid.Column>
-                <Grid.Column>
+                  )}
                   {object.properties.wiki_url && (
                     <a
                       href={object.properties.wiki_url}
