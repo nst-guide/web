@@ -15,11 +15,19 @@ function TooltipPin(props) {
 }
 
 function TooltipDiv(props) {
-  const { x, y, width = '70%', maxWidth = '600px', pinned = false } = props;
+  const {
+    x,
+    y,
+    width = '70%',
+    maxWidth = '600px',
+    maxHeight = '60%',
+    pinned = false,
+  } = props;
 
   // Setting pointerEvents based on the state of `pinned` is necessary because
   // otherwise I was getting flickering from the pointerEvent of the div
   // conflicting with the pointerEvent of the Deck Map
+  // overflowY takes effect when you have a maxHeight!
   return (
     <div
       style={{
@@ -44,6 +52,8 @@ function TooltipDiv(props) {
             : null,
         width: width,
         maxWidth: maxWidth,
+        maxHeight: maxHeight,
+        overflowY: 'auto',
         backgroundColor: 'white',
       }}
     >
