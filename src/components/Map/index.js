@@ -387,8 +387,11 @@ class Map extends React.Component {
             width: 240,
             left: 30,
             top: 160,
+            maxHeight: '70%',
             zIndex: 1,
             backgroundColor: '#fff',
+            pointerEvents: 'auto',
+            overflowY: 'auto',
           }}
         >
           <Accordion as={Menu} vertical fluid styled style={{ maxWidth: 240 }}>
