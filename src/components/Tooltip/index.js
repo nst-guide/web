@@ -150,6 +150,7 @@ export function NationalParkTooltip(props) {
 
   let image;
   if (object && object.properties && object.properties.images) {
+    // TODO allow scrolling through NPS images
     image = JSON.parse(object.properties.images)[0];
   }
 
@@ -212,6 +213,7 @@ export function NationalParkTooltip(props) {
             </Grid>
           </Card.Meta>
           <Accordion defaultActiveIndex={0} panels={panels} />
+          {image && <Card.Meta>Photo © {image.credit}</Card.Meta>}
         </Card.Content>
       </Card>
     </TooltipDiv>
