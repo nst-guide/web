@@ -225,7 +225,9 @@ export function NationalParkTooltip(props) {
               </Grid.Row>
             </Grid>
           </Card.Meta>
+          <Card.Description>
           <Accordion defaultActiveIndex={0} panels={panels} />
+          </Card.Description>
           {image && <Card.Meta>Photo © {image.credit}</Card.Meta>}
         </Card.Content>
       </Card>
@@ -299,6 +301,113 @@ export function NationalForestTooltip(props) {
               {object.properties.wiki_summary}
             </Card.Description>
           )}
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
+  );
+}
+
+export function WildernessTooltip(props) {
+  const {
+    object,
+    pointerX,
+    pointerY,
+    pinned = false,
+    useMetric = false,
+    onCornerClick = null,
+  } = props || {};
+
+  console.log(object);
+
+  let trailLength;
+  if (object && object.properties && object.properties.length) {
+    const trailMeters = object.properties.length;
+    if (useMetric) {
+      const trailKM = Math.round(trailMeters / 1000);
+      trailLength = `${trailKM} trail kilometers`;
+    } else {
+      const trailMiles = Math.round(trailMeters / 1609.34);
+      trailLength = `${trailMiles} trail miles`;
+    }
+  }
+
+  const panels = [];
+  if (object && object.properties && object.properties.descriptio) {
+    const content = (
+        <p>
+          {object.properties.descriptio}
+          {'  '}
+          <a
+            href={object.properties.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Official website"
+          >
+            Read more.
+          </a>
+        </p>
+    );
+    panels.push({
+      key: 'description',
+      title: 'Overview',
+      content: content,
+    });
+  }
+  if (object && object.properties && object.properties.wiki_summary) {
+    panels.push({
+      key: 'wiki_summary',
+      title: 'Wikipedia Summary',
+      content: object.properties.wiki_summary,
+    });
+  }
+
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} pinned={pinned} width="280px">
+      <Card>
+        {object.properties.wiki_image && (
+          <SemanticImage alt="Image" src={object.properties.wiki_image} />
+        )}
+        {pinned && <TooltipPin onClick={onCornerClick} />}
+        <Card.Content>
+          <Card.Header>{object.properties.name}</Card.Header>
+          <Card.Meta>
+            <Grid columns={1}>
+              <Grid.Row>
+                <Grid.Column>
+                  {trailLength && trailLength}
+                  {'  '}
+                  {object.properties.url && (
+                    <a
+                      href={object.properties.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Official website"
+                    >
+                      <Icon link name="globe" />
+                    </a>
+                  )}
+                  {object.properties.wiki_url && (
+                    <a
+                      href={object.properties.wiki_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Wikipedia Page"
+                    >
+                      <Icon link name="wikipedia w" />
+                    </a>
+                  )}
+                </Grid.Column>
+                {object.properties.yeardesign && (
+                  <Grid.Column>
+                    Designated in {object.properties.yeardesign}
+                  </Grid.Column>
+                )}
+              </Grid.Row>
+            </Grid>
+          </Card.Meta>
+          <Card.Description>
+            <Accordion defaultActiveIndex={0} panels={panels} />
+          </Card.Description>
         </Card.Content>
       </Card>
     </TooltipDiv>

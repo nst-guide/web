@@ -8,6 +8,7 @@ export const interactiveLayerIds = [
   'nationalpark_fill',
   'nationalforest_fill',
   'wildfire_historical_fill',
+  'wilderness_fill',
   // Basemap layers:
 ];
 
@@ -64,6 +65,75 @@ export function NationalParkLayer(props) {
         }}
         layout={{
           'text-field': '{fullName}',
+          'text-font': ['Open Sans Italic'],
+          'text-max-width': 6.25,
+          'text-size': {
+            stops: [
+              [6, 10],
+              [14, 17],
+            ],
+          },
+          'text-transform': 'none',
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+    </Source>
+  );
+}
+
+export function WildernessLayer(props) {
+  const { beforeId, opacity, visible } = props;
+  return (
+    <Source
+      id="wilderness"
+      type="vector"
+      url="https://tiles.nst.guide/pct/wilderness/tile.json"
+    >
+      <Layer
+        id="wilderness_fill"
+        beforeId={beforeId}
+        type="fill"
+        source-layer="wilderness"
+        paint={{
+          'fill-opacity': opacity,
+          'fill-color': 'hsl(85, 100%, 25%)',
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="wilderness_outline"
+        beforeId={beforeId}
+        type="line"
+        source-layer="wilderness"
+        paint={{
+          'line-opacity': Math.min(opacity + 0.1, 1),
+          'line-color': 'hsl(85, 100%, 15%)',
+          'line-width': 1,
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="wilderness_label"
+        beforeId={beforeId}
+        type="symbol"
+        source-layer="wilderness_label"
+        paint={{
+          'text-color': '#334',
+          'text-halo-blur': 1,
+          'text-halo-color': 'rgba(255,255,255,0.8)',
+          'text-halo-width': {
+            stops: [
+              [6, 1],
+              [14, 0.5],
+            ],
+          },
+        }}
+        layout={{
+          'text-field': '{name}',
           'text-font': ['Open Sans Italic'],
           'text-max-width': 6.25,
           'text-size': {

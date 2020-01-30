@@ -26,6 +26,7 @@ import {
   NationalForestLayer,
   HistoricalWildfireLayer,
   SlopeAngleLayer,
+  WildernessLayer,
   PCTTrailLayer,
   interactiveLayerIds,
 } from './MapboxLayer';
@@ -33,6 +34,7 @@ import {
   CurrentWildfireTooltip,
   NationalParkTooltip,
   NationalForestTooltip,
+  WildernessTooltip,
   HistoricalWildfireTooltip,
   PhotoTooltip,
   WikipediaTooltip,
@@ -65,6 +67,8 @@ class Map extends React.Component {
     layerNationalParksOpacity: 0.3,
     layerNationalForestsVisible: false,
     layerNationalForestsOpacity: 0.25,
+    layerWildernessVisible: false,
+    layerWildernessOpacity: 0.25,
     layerHistoricalWildfireVisible: false,
     layerHistoricalWildfireOpacity: 0.3,
     layerSlopeAngleVisible: false,
@@ -139,6 +143,24 @@ class Map extends React.Component {
     ) {
       return (
         <NationalForestTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          useMetric={this.state.mapUnitsMetric}
+          pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
+        />
+      );
+    }
+    if (
+      pickedObject &&
+      pickedLayer &&
+      pickedLayer.id === 'wilderness_fill'
+    ) {
+      return (
+        <WildernessTooltip
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
@@ -376,7 +398,7 @@ class Map extends React.Component {
           >
             <NationalParkLayer
               beforeId={beforeId({
-                layerType: 'raster',
+                layerType: 'vector',
                 mapStyle: mapStyle.id,
               })}
               opacity={this.state.layerNationalParksOpacity}
@@ -384,7 +406,7 @@ class Map extends React.Component {
             />
             <NationalForestLayer
               beforeId={beforeId({
-                layerType: 'raster',
+                layerType: 'vector',
                 mapStyle: mapStyle.id,
               })}
               opacity={this.state.layerNationalForestsOpacity}
@@ -392,11 +414,19 @@ class Map extends React.Component {
             />
             <HistoricalWildfireLayer
               beforeId={beforeId({
-                layerType: 'raster',
+                layerType: 'vector',
                 mapStyle: mapStyle.id,
               })}
               opacity={this.state.layerHistoricalWildfireOpacity}
               visible={this.state.layerHistoricalWildfireVisible}
+            />
+            <WildernessLayer
+              beforeId={beforeId({
+                layerType: 'vector',
+                mapStyle: mapStyle.id,
+              })}
+              opacity={this.state.layerWildernessOpacity}
+              visible={this.state.layerWildernessVisible}
             />
             <SlopeAngleLayer
               beforeId={beforeId({
@@ -500,7 +530,7 @@ class Map extends React.Component {
                       style={{ paddingBottom: 10 }}
                     />
                     <Checkbox
-                      label="Show all photos"
+                      label="Show all"
                       onChange={() => this._toggleState('layerPhotosShowAll')}
                       checked={this.state.layerPhotosShowAll}
                     />
@@ -657,6 +687,38 @@ class Map extends React.Component {
                     <OpacitySlider
                       name="layerNationalForestsOpacity"
                       value={this.state.layerNationalForestsOpacity}
+                      onChange={this._onChangeOpacity}
+                    />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'wilderness'
+                    }
+                    content="Designated Wilderness"
+                    onClick={() =>
+                      this._toggleMapOptionsExpanded('wilderness')
+                    }
+                  />
+                  <Accordion.Content
+                    active={
+                      this.state.dataOverlaysExpandedSection ===
+                      'wilderness'
+                    }
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() =>
+                        this._toggleState('layerWildernessVisible')
+                      }
+                      checked={this.state.layerWildernessVisible}
+                      style={{ paddingBottom: 10 }}
+                    />
+                    <OpacitySlider
+                      name="layerWildernessOpacity"
+                      value={this.state.layerWildernessOpacity}
                       onChange={this._onChangeOpacity}
                     />
                   </Accordion.Content>
