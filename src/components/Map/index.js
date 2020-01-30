@@ -46,6 +46,7 @@ const pickingRadius = 5;
 class Map extends React.Component {
   state = {
     mapStyle: mapStyles[0],
+    showTooltip: true,
     pinnedTooltip: false,
     pickedObject: null,
     pickedLayer: null,
@@ -72,12 +73,22 @@ class Map extends React.Component {
   };
 
   _renderTooltip() {
-    const { pinnedTooltip, pickedObject, pickedLayer, pointerX, pointerY } =
-      this.state || {};
+    const {
+      pinnedTooltip,
+      pickedObject,
+      pickedLayer,
+      pointerX,
+      pointerY,
+      showTooltip,
+    } = this.state || {};
 
     // Sometimes pointerX and pointerY will get set to -1 when the pointer is
     // over the map options div
     if (pointerX === -1 || pointerY === -1) {
+      return;
+    }
+
+    if (!showTooltip) {
       return;
     }
 
@@ -465,6 +476,12 @@ class Map extends React.Component {
               Map Options
             </Accordion.Title>
             <Accordion.Content active={this.state.dataOverlaysExpanded}>
+              <Checkbox
+                toggle
+                label="Enable Tooltip"
+                onChange={() => this._toggleState('showTooltip')}
+                checked={this.state.showTooltip}
+              />
               <Accordion as={Menu} vertical fluid styled>
                 <Menu.Item>
                   <Accordion.Title
