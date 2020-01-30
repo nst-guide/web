@@ -573,7 +573,7 @@ class Map extends React.Component {
                       this.state.dataOverlaysExpandedSection ===
                       'wildfire_historical'
                     }
-                    content="Historical Wildfires"
+                    content="Historical Wildfire"
                     onClick={() =>
                       this._toggleMapOptionsExpanded('wildfire_historical')
                     }
