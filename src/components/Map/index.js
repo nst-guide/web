@@ -63,7 +63,7 @@ class Map extends React.Component {
     layerNationalParksVisible: false,
     layerNationalParksOpacity: 0.3,
     layerNationalForestsVisible: false,
-    layerNationalForestsOpacity: 0.3,
+    layerNationalForestsOpacity: 0.25,
     layerHistoricalWildfireVisible: false,
     layerHistoricalWildfireOpacity: 0.3,
     layerSlopeAngleVisible: false,

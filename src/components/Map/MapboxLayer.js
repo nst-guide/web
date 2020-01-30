@@ -26,9 +26,53 @@ export function NationalParkLayer(props) {
         source-layer="nationalparks"
         paint={{
           'fill-opacity': opacity,
-          'fill-color': 'rgb(115, 77, 38)',
+          'fill-color': 'hsl(30, 50%, 30%)',
         }}
         layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="nationalpark_outline"
+        beforeId={beforeId}
+        type="line"
+        source-layer="nationalparks"
+        paint={{
+          'line-opacity': Math.min(opacity + 0.1, 1),
+          'line-color': 'hsl(30, 50%, 0%)',
+          'line-width': 1,
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="nationalpark_label"
+        beforeId={beforeId}
+        type="symbol"
+        source-layer="nationalparks_label"
+        paint={{
+          'text-color': '#334',
+          'text-halo-blur': 1,
+          'text-halo-color': 'rgba(255,255,255,0.8)',
+          'text-halo-width': {
+            stops: [
+              [6, 1],
+              [14, 0.5],
+            ],
+          },
+        }}
+        layout={{
+          'text-field': '{fullName}',
+          'text-font': ['Open Sans Italic'],
+          'text-max-width': 6.25,
+          'text-size': {
+            stops: [
+              [6, 10],
+              [14, 17],
+            ],
+          },
+          'text-transform': 'none',
           visibility: visible ? 'visible' : 'none',
         }}
       />
@@ -64,11 +108,41 @@ export function NationalForestLayer(props) {
         type="line"
         source-layer="nationalforests"
         paint={{
-          'line-opacity': Math.min(opacity + .1, 1),
+          'line-opacity': Math.min(opacity + 0.1, 1),
           'line-color': 'hsl(59, 100%, 0%)',
           'line-width': 1,
         }}
         layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="nationalforest_label"
+        beforeId={beforeId}
+        type="symbol"
+        source-layer="nationalforests_label"
+        paint={{
+          'text-color': '#334',
+          'text-halo-blur': 1,
+          'text-halo-color': 'rgba(255,255,255,0.8)',
+          'text-halo-width': {
+            stops: [
+              [6, 1],
+              [14, 0.5],
+            ],
+          },
+        }}
+        layout={{
+          'text-field': '{forestname}',
+          'text-font': ['Open Sans Italic'],
+          'text-max-width': 6.25,
+          'text-size': {
+            stops: [
+              [6, 10],
+              [14, 17],
+            ],
+          },
+          'text-transform': 'none',
           visibility: visible ? 'visible' : 'none',
         }}
       />
@@ -108,6 +182,36 @@ export function HistoricalWildfireLayer(props) {
           'line-width': 1,
         }}
         layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="wildfire_historical_label"
+        beforeId={beforeId}
+        type="symbol"
+        source-layer="wildfire_historical_label"
+        paint={{
+          'text-color': '#334',
+          'text-halo-blur': 1,
+          'text-halo-color': 'rgba(255,255,255,0.8)',
+          'text-halo-width': {
+            stops: [
+              [6, 1],
+              [14, 0.5],
+            ],
+          },
+        }}
+        layout={{
+          'text-field': '{name} Fire',
+          'text-font': ['Open Sans Italic'],
+          'text-max-width': 6.25,
+          'text-size': {
+            stops: [
+              [9, 12],
+              [14, 17],
+            ],
+          },
+          'text-transform': 'none',
           visibility: visible ? 'visible' : 'none',
         }}
       />
