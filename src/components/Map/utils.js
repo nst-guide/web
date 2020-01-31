@@ -19,7 +19,7 @@ export function canUseWebP() {
 
 // https://stackoverflow.com/a/24600597
 export const isMobile =
-  navigator === 'undefined' ? false : /Mobi/.test(navigator.userAgent);
+  typeof navigator === 'undefined' ? false : /Mobi/.test(navigator.userAgent);
 
 // Determine where in the layer hierarchy new layers should be placed
 // layerType: 'raster' or 'vector'
