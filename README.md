@@ -1,97 +1,80 @@
-# Gatsby 2.0 starter
+# National Scenic Trails Guide: Web
 
-[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
-[![Build Status](https://travis-ci.org/fabien0102/gatsby-starter.svg?branch=master)](https://travis-ci.org/fabien0102/gatsby-starter)
-[![Build status](https://ci.appveyor.com/api/projects/status/k06pajqcm23lay1s/branch/master?svg=true)](https://ci.appveyor.com/project/fabien0102/gatsby-starter/branch/master)
-[![Code Climate](https://codeclimate.com/github/fabien0102/gatsby-starter/badges/gpa.svg)](https://codeclimate.com/github/fabien0102/gatsby-starter)
-[![Test Coverage](https://codeclimate.com/github/fabien0102/gatsby-starter/badges/coverage.svg)](https://codeclimate.com/github/fabien0102/gatsby-starter/coverage)
+Website: <https://nst.guide>
 
-Demo: <https://fabien0102-gatsby-starter.netlify.com/>
+Open source website for exploring National Scenic Trails, starting with the
+Pacific Crest Trail.
 
-Storybook: <https://fabien0102-gatsby-starter.netlify.com/docs/>
+## Overview
 
-Gatsby 2.0 starter for generate awesome static website working with a nice env development.
+### Map Rendering
 
-## Warning
+This uses [Deck.gl](https://deck.gl/) and [React Map
+GL](https://uber.github.io/react-map-gl/) to render the map. React Map GL is
+essentially a wrapper around the base Mapbox-GL-JS to allow it to work well with
+React. Deck.gl is a set of extensions on React Map GL to render cool geospatial
+visualizations with Web GL. Note that here there are two separate rendering
+layers: Deck.gl and React Map GL have no knowledge of what the other is
+displaying. The only tie between them is Deck.gl keeping track of the map
+location state.
 
-This starter is currently in wip (see progression to #What's inside session).
+Using both Deck.gl and React Map GL allows me to use the best features of each.
+Deck.gl enables cool 3D stuff, including hopefully [3D terrain
+visualizations](https://github.com/uber/deck.gl/pull/3984) in the near future.
+However Deck.gl doesn't render vector tiles as nicely as Mapbox does. Rendering
+vector tiles with Mapbox allows me to get the benefits of their smaller file
+sizes while also easily inserting new layers in between the existing style
+stack, so that I can insert new layers _underneath_ existing labels.
 
-## Getting started
+Because I use each program for rendering, I need to be able to pick objects from
+each source. I currently first call Deck.gl, and if it finds any objects under
+the cursor return those. If not, send the x, y position of the cursor to React
+Map GL/Mapbox GL and run `queryRenderedFeatures` to find the object rendered at
+that position with the Mapbox rendering.
 
-Install this starter (assuming Gatsby is installed) by running from your CLI:
+### Map Layers
+
+I generate map layers from several different sources using code in the
+[nst-guide/data](https://github.com/nst-guide/data) repository. Check out that
+repository or its [documentation website](https://nst-guide.github.io/data/) for
+more information about how I generate the data for each layer.
+
+### Map Style
+
+This project is an intermediate step in hopefully developing a free, open source
+navigation app for the Pacific Crest Trail built on React Native. In order to
+support free offline maps without needing to worry about API fees, I generated
+my own vector topographic maps using OpenStreetMap data, USGS elevation data for
+the contours and Terrain RGB tiles, and USDA National Agriculture Imagery
+Program (NAIP) data for the aerial tiles.
+
+More information about the map style and how to generate your own data is
+available on the style repository:
+[nst-guide/osm-liberty-topo](https://github.com/nst-guide/osm-liberty-topo).
+
+## Developing
+
+This website is made with React, GatsbyJS, Deck.gl, and React Map GL. I use
+Semantic UI React for the UI.
+
+If you're interested in contributing to the project, check out the [backlog of
+issues](https://github.com/nst-guide/web/issues), or just read through the code
+and tell me [in an issue](https://github.com/nst-guide/web/issues/new) how to
+improve it! I'm relatively new at front-end development, so there's _a lot_ that
+could be improved!
+
+To get started, assuming you have the Gatsby CLI installed:
 
 ```bash
-$ gatsby new my-website https://github.com/fabien0102/gatsby-starter
+git clone https://github.com/nst-guide/web
+npm install
+gatsby develop
 ```
 
-Run `npm start` (or press `F5` if you are on VSCode) to hot-serve your website on <http://localhost:8000>.
+### NPM Scripts
 
-Run `npm run build` to create static site ready to host (`/public`)
+- `npm install` to install dependencies
+- `gatsby develop` to run a hot-reloading development server
+- `npm run build` to build the project and save locally
+- `npm run deploy` to build the project and upload to S3 (which I use for hosting)
 
-## What's inside?
-
--   [ ] Gatsby 2.0 (alpha)
-    -   [x] sharp
-    -   [x] offline support
-    -   [ ] google analytics
-    -   [x] manifest
-    -   [x] typescript
-    -   [x] blog in markdown
--   [x] Best practices tools
-    -   [x] [Jest](https://facebook.github.io/jest/) / [Enzyme](http://airbnb.io/enzyme/)
-    -   [x] [Storybook](https://storybooks.js.org/)
-    -   [x] [Typescript](https://www.typescriptlang.org/) / [tslint](https://palantir.github.io/tslint/)
-    -   [x] [xo linter](https://github.com/sindresorhus/xo)
-    -   [x] [Remark-lint](https://github.com/wooorm/remark-lint)
-    -   [x] [Husky](https://github.com/typicode/husky) & [lint-staged](https://github.com/okonet/lint-staged) for autofix each commit
-    -   [x] Travis/AppVeyor config (unix-osx-windows CI)
-    -   [x] Code climate config
--   [x] SEO
-    -   [x] [Helmet](https://github.com/nfl/react-helmet)
--   [x] [Semantic-ui](http://react.semantic-ui.com) for styling
--   [x] Lazyboy tools
-    -   [x] [plop](https://github.com/amwmedia/plop) templates -> `npm run generate`
-
-## Files structure
-
-     .
-     ├── data                          // website data (included into graphQL)
-     │   ├── author.json               // list of blog authors
-     │   ├── avatars                   // authors avatars
-     │   └── blog                      // all blog data (posts, images)
-     ├── gatsby-config.js              // gatsby configuration
-     ├── gatsby-node.js                // gatsby node hooks
-     ├── generators                    // generators (`npm run generate`)
-     │   ├── blog-post-generator.js    // `blog post` generator
-     │   ├── component-generator.js    // `component` generator
-     │   ├── page-generator.js         // `page` generator
-     │   ├── plopfile.js               // generators entry
-     │   ├── templates                 // all templates (handlebar notation)
-     │   └── utils.js                  // utils scripts for generators
-     ├── package.json
-     ├── public                        // output folder (in .gitignore)
-     ├── README.md                     // this file
-     ├── src                           // sources
-     │   ├── components                // all react components
-     │   ├── css                       // styles
-     │   ├── declarations.d.ts         // declarations for no typescript modules/files
-     │   ├── graphql-types.d.ts        // graphql types (`npm run graphql-types`)
-     │   ├── html.tsx                  // main html (required)
-     │   ├── layouts                   // layouts
-     │   │   └── default.tsx           // default layout (required)
-     │   ├── pages                     // all pages
-     │   └── templates                 // all templates (used for procedural page creation, see `gatsby-node.js`)
-     ├── tools                         // miscs tools for dev
-     │   └── update-post-date.js       // update post date hook
-     ├── tsconfig.json                 // typescript configuration
-     ├── tslint.json                   // tslint configuration
-     └── package-lock.json             // npm lock file
-
-## Plop generators - `npm run generate`
-
-To avoid any boring copy/paste, this starter-kit have many generators to permit
-simple bootstrap of current file pattern (eg. components/pages/blog posts). e.g. to add a new blog post first add the authors to data/authors.json and add authors' images to the data/avatars folder. Next execute 'npm run generate' and select 'Blog post'. Follow the prompts for a new post. Each blog post requires an image be added to the /data/blog/<your new post> folder prior to running 'gatsby develop'.
-
-You can add/delete/modify any generators into `/generators` folder.
-
-Be lazy and have fun!
