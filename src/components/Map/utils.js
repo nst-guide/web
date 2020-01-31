@@ -17,6 +17,9 @@ export function canUseWebP() {
   return false;
 }
 
+// https://stackoverflow.com/a/24600597
+export const isMobile = /Mobi/.test(navigator.userAgent)
+
 // Determine where in the layer hierarchy new layers should be placed
 // layerType: 'raster' or 'vector'
 // mapStyle: string for style URL

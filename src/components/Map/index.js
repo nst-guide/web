@@ -8,7 +8,7 @@ import InteractiveMap, {
   ScaleControl,
 } from 'react-map-gl';
 import Select from 'react-select';
-import { beforeId, getInitialViewState } from './utils';
+import { beforeId, getInitialViewState, isMobile } from './utils';
 import { loadMapStyle, mapStyles } from './mapStyle';
 import {
   Accordion,
@@ -55,7 +55,7 @@ class Map extends React.Component {
     pointerX: null,
     pointerY: null,
     mapUnitsMetric: false,
-    dataOverlaysExpanded: false,
+    dataOverlaysExpanded: isMobile ? false : true,
     dataOverlaysExpandedSection: null,
     layerPhotosVisible: false,
     layerPhotosShowAll: false,
@@ -154,11 +154,7 @@ class Map extends React.Component {
         />
       );
     }
-    if (
-      pickedObject &&
-      pickedLayer &&
-      pickedLayer.id === 'wilderness_fill'
-    ) {
+    if (pickedObject && pickedLayer && pickedLayer.id === 'wilderness_fill') {
       return (
         <WildernessTooltip
           object={pickedObject}
@@ -260,6 +256,9 @@ class Map extends React.Component {
   };
 
   _onClick = event => {
+    if (isMobile) {
+      this.setState({ dataOverlaysExpanded: false });
+    }
     this._updatePicked(event, 'click');
   };
 
@@ -694,18 +693,14 @@ class Map extends React.Component {
                 <Menu.Item>
                   <Accordion.Title
                     active={
-                      this.state.dataOverlaysExpandedSection ===
-                      'wilderness'
+                      this.state.dataOverlaysExpandedSection === 'wilderness'
                     }
                     content="Designated Wilderness"
-                    onClick={() =>
-                      this._toggleMapOptionsExpanded('wilderness')
-                    }
+                    onClick={() => this._toggleMapOptionsExpanded('wilderness')}
                   />
                   <Accordion.Content
                     active={
-                      this.state.dataOverlaysExpandedSection ===
-                      'wilderness'
+                      this.state.dataOverlaysExpandedSection === 'wilderness'
                     }
                   >
                     <Checkbox
