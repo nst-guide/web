@@ -55,7 +55,7 @@ class Map extends React.Component {
     pointerX: null,
     pointerY: null,
     mapUnitsMetric: false,
-    dataOverlaysExpanded: isMobile ? false : true,
+    dataOverlaysExpanded: false,
     dataOverlaysExpandedSection: null,
     layerPhotosVisible: false,
     layerPhotosShowAll: false,
@@ -256,9 +256,6 @@ class Map extends React.Component {
   };
 
   _onClick = event => {
-    if (isMobile) {
-      this.setState({ dataOverlaysExpanded: false });
-    }
     this._updatePicked(event, 'click');
   };
 
