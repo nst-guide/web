@@ -516,19 +516,23 @@ class Map extends React.Component {
                 <Menu.Item>
                   <Accordion.Title
                     active={this.state.dataOverlaysExpandedSection === 'photos'}
-                    content="Photography"
                     index={0}
-                    onClick={() => this._toggleMapOptionsExpanded('photos')}
+                    onClick={() => {
+                      this._toggleMapOptionsExpanded('photos');
+                      this._toggleState('layerPhotosVisible');
+                    }}
+                  >
+                    <Icon
+                      name="dropdown"
+                    />
+                    <Checkbox
+                      label="Photography"
+                      checked={this.state.layerPhotosVisible}
                   />
+                  </Accordion.Title>
                   <Accordion.Content
                     active={this.state.dataOverlaysExpandedSection === 'photos'}
                   >
-                    <Checkbox
-                      label="Enabled"
-                      onChange={() => this._toggleState('layerPhotosVisible')}
-                      checked={this.state.layerPhotosVisible}
-                      style={{ paddingBottom: 10 }}
-                    />
                     <Checkbox
                       label="Show all"
                       onChange={() => this._toggleState('layerPhotosShowAll')}
