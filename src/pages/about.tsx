@@ -39,10 +39,6 @@ const repositories = [
     repoName: "naip",
     desc: "Generate aerial imagery map tiles from USGS NAIP data",
   },
-  {
-    repoName: "openmaptiles",
-    desc: "Generate map data from OpenStreetMap",
-  },
 ];
 
 const RepositoriesList = (props) => {
