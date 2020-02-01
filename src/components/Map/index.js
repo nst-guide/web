@@ -27,6 +27,7 @@ import {
   HistoricalWildfireLayer,
   SlopeAngleLayer,
   WildernessLayer,
+  TransitLayer,
   PCTTrailLayer,
   interactiveLayerIds,
 } from './MapboxLayer';
@@ -37,6 +38,7 @@ import {
   WildernessTooltip,
   HistoricalWildfireTooltip,
   PhotoTooltip,
+  TransitTooltip,
   WikipediaTooltip,
 } from '../Tooltip';
 
@@ -73,6 +75,8 @@ class Map extends React.Component {
     layerHistoricalWildfireOpacity: 0.3,
     layerSlopeAngleVisible: false,
     layerSlopeAngleOpacity: 0.3,
+    layerTransitVisible: false,
+    layerTransitShowTowns: false,
     layerWikipediaVisible: false,
   };
 
@@ -189,6 +193,19 @@ class Map extends React.Component {
     if (pickedObject && pickedLayer && pickedLayer.id === 'wikipedia') {
       return (
         <WikipediaTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
+        />
+      );
+    }
+    if (pickedObject && pickedLayer && pickedLayer.id === 'transit_routes') {
+      return (
+        <TransitTooltip
           object={pickedObject}
           pointerX={pointerX}
           pointerY={pointerY}
@@ -431,6 +448,14 @@ class Map extends React.Component {
               })}
               opacity={this.state.layerSlopeAngleOpacity}
               visible={this.state.layerSlopeAngleVisible}
+            />
+            <TransitLayer
+              beforeId={beforeId({
+                layerType: 'vector',
+                mapStyle: mapStyle.id,
+              })}
+              visible={this.state.layerTransitVisible}
+              showTownTransit={this.state.layerTransitShowTowns}
             />
             <PCTTrailLayer
               beforeId={beforeId({
@@ -744,6 +769,27 @@ class Map extends React.Component {
                       onChange={this._onChangeOpacity}
                     />
                     <SlopeAngleLegend />
+                  </Accordion.Content>
+                </Menu.Item>
+                <Menu.Item>
+                  <Accordion.Title
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'transit'
+                    }
+                    content="Transit"
+                    index={0}
+                    onClick={() => this._toggleMapOptionsExpanded('transit')}
+                  />
+                  <Accordion.Content
+                    active={
+                      this.state.dataOverlaysExpandedSection === 'transit'
+                    }
+                  >
+                    <Checkbox
+                      label="Enabled"
+                      onChange={() => this._toggleState('layerTransitVisible')}
+                      checked={this.state.layerTransitVisible}
+                    />
                   </Accordion.Content>
                 </Menu.Item>
                 <Menu.Item>

@@ -9,6 +9,7 @@ export const interactiveLayerIds = [
   'nationalforest_fill',
   'wildfire_historical_fill',
   'wilderness_fill',
+  'transit_routes',
   // Basemap layers:
 ];
 
@@ -306,6 +307,116 @@ export function SlopeAngleLayer(props) {
         }}
         layout={{
           visibility: visible ? 'visible' : 'none',
+        }}
+      />
+    </Source>
+  );
+}
+
+export function TransitLayer(props) {
+  const { beforeId, visible, showTownTransit } = props;
+
+  // const filter = showTownTransit
+  //   ? ["==", 'true', 'true']
+  //   : [
+  //       'any',
+  //       [
+  //         ['!has', '_town'],
+  //         ['!=', ['get', '_town'], 1],
+  //       ],
+  //     ];
+
+  return (
+    <Source
+      id="transit"
+      type="vector"
+      url="https://tiles.nst.guide/pct/transit/tile.json"
+    >
+      <Layer
+        id="transit_routes_casing"
+        beforeId={beforeId}
+        source-layer="routes"
+        type="line"
+        // filter={filter}
+        paint={{
+          'line-color': '#000',
+          'line-width': 0.6,
+          'line-gap-width': 1.6,
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="transit_routes"
+        beforeId={beforeId}
+        source-layer="routes"
+        type="line"
+        // filter={filter}
+        paint={{
+          'line-color': ['concat', '#', ['get', 'color']],
+          'line-width': 2,
+        }}
+        layout={{
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+      <Layer
+        id="transit_stops"
+        source-layer="stops"
+        type="symbol"
+        paint={{
+          'text-color': '#4898ff',
+          'text-halo-blur': 0.5,
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1,
+        }}
+        layout={{
+          'icon-image': 'bus_11',
+          'text-anchor': 'left',
+          'text-font': ['Open Sans Italic'],
+          'text-max-width': 9,
+          'text-offset': [0.9, 0],
+          'text-size': {
+            base: 1,
+            stops: [
+              [10, 8],
+              [14, 10],
+            ],
+          },
+          visibility: visible ? 'visible' : 'none',
+        }}
+      />
+
+      <Layer
+        id="transit_routes_label"
+        source-layer="routes"
+        type="symbol"
+        // filter={filter}
+        layout={{
+          'symbol-placement': 'line',
+          'text-anchor': 'center',
+          'text-field': '{name}',
+          'text-font': ['Open Sans Regular'],
+          'text-offset': [1, 0],
+          'text-size': {
+            base: 1,
+            stops: [
+              [5, 10],
+              [14, 13],
+            ],
+          },
+          'symbol-spacing': 350,
+          'text-max-angle': 50,
+          'text-letter-spacing': 0,
+          'text-max-width': 15,
+          visibility: visible ? 'visible' : 'none',
+        }}
+        paint={{
+          'text-color': 'rgba(30, 30, 30, 1)',
+          'text-halo-blur': 0.5,
+          'text-halo-width': 2,
+          'text-halo-color': 'rgba(255, 255, 255, 1)',
         }}
       />
     </Source>

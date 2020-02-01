@@ -91,6 +91,73 @@ export function PhotoTooltip(props) {
   );
 }
 
+export function TransitTooltip(props) {
+  const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
+    props || {};
+
+  let tags;
+  let routeURL;
+  try {
+    tags = JSON.parse(object.properties.tags)
+    routeURL = tags.route_url;
+  }
+  catch {
+    console.error('unable to parse tags')
+  }
+
+  const {vehicle_type} = object.properties;
+  let icon = null;
+  if (vehicle_type === 'bus') {
+    icon = 'bus';
+  } else if (vehicle_type === 'rail') {
+    icon = 'train';
+  }
+
+  return (
+    <TooltipDiv x={pointerX} y={pointerY} width="200px" pinned={pinned}>
+      <Card>
+        {pinned && <TooltipPin onClick={onCornerClick} />}
+        <Card.Content>
+          <Card.Header>
+            {icon && <Icon name={icon} />}
+            {object &&
+              object.properties &&
+              object.properties.name &&
+              toTitleCase(object.properties.name)}
+          </Card.Header>
+          <Card.Meta>
+            <Grid columns={1}>
+              <Grid.Row>
+                <Grid.Column>
+                  {object &&
+                    object.properties &&
+                    object.properties.operated_by_name && (
+                      <span>{object.properties.operated_by_name}</span>
+                    )}
+                  {'  '}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Card.Meta>
+          <Card.Description>
+            {routeURL && (
+              <a
+                href={routeURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Official website"
+              >
+                Transit website
+              </a>
+            )}
+          </Card.Description>
+        </Card.Content>
+      </Card>
+    </TooltipDiv>
+  );
+}
+
+
 export function CurrentWildfireTooltip(props) {
   const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
     props || {};
