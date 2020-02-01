@@ -337,7 +337,7 @@ export function TransitLayer(props) {
         beforeId={beforeId}
         source-layer="routes"
         type="line"
-        // filter={filter}
+        filter={['!=', ['get', 'operated_by_name'], 'Amtrak California']}
         paint={{
           'line-color': '#000',
           'line-width': 0.6,
@@ -352,7 +352,7 @@ export function TransitLayer(props) {
         beforeId={beforeId}
         source-layer="routes"
         type="line"
-        // filter={filter}
+        filter={['!=', ['get', 'operated_by_name'], 'Amtrak California']}
         paint={{
           'line-color': ['concat', '#', ['get', 'color']],
           'line-width': 2,
@@ -392,7 +392,7 @@ export function TransitLayer(props) {
         id="transit_routes_label"
         source-layer="routes"
         type="symbol"
-        // filter={filter}
+        filter={['!=', ['get', 'operated_by_name'], 'Amtrak California']}
         layout={{
           'symbol-placement': 'line',
           'text-anchor': 'center',
