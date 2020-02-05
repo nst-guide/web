@@ -40,6 +40,7 @@ import {
   PhotoTooltip,
   TransitTooltip,
   WikipediaTooltip,
+  NDFDCurrentTooltip,
 } from '../Tooltip';
 
 // You'll get obscure errors without including the Mapbox GL CSS
@@ -216,6 +217,19 @@ class Map extends React.Component {
         />
       );
     }
+    if (pickedObject && pickedLayer && pickedLayer.id === 'ndfd_current') {
+      return (
+        <NDFDCurrentTooltip
+          object={pickedObject}
+          pointerX={pointerX}
+          pointerY={pointerY}
+          pinned={pinnedTooltip}
+          onCornerClick={() =>
+            this.setState({ pickedObject: null, pinnedTooltip: false })
+          }
+        />
+      );
+    }
   }
 
   // Called on click by deck.gl
@@ -378,11 +392,27 @@ class Map extends React.Component {
       visible: this.state.layerWikipediaVisible,
     });
 
+    const ndfd_current = new GeoJsonLayer({
+      id: 'ndfd_current',
+      data: 'https://tiles.nst.guide/pct/ndfd_current.geojson',
+      // Styles
+      // opacity: this.state.layerCurrentWildfireOpacity,
+      opacity: 0.5,
+      getFillColor: [81, 153, 157],
+      stroked: true,
+      // Interactive props
+      pickable: true,
+      autoHighlight: true,
+      // visible: this.state.layerCurrentWildfireVisible,
+      visible: true,
+    });
+
     const layers = [
       airQualityLayer,
       photosLayer,
       currentWildfire,
       wikipediaLayer,
+      // ndfd_current,
     ];
 
     return (

@@ -5,6 +5,8 @@ import {
   Label,
   Icon,
   Grid,
+  Dimmer,
+  Loader,
   Image as SemanticImage,
 } from 'semantic-ui-react';
 import Image from '../Image';
@@ -293,7 +295,7 @@ export function NationalParkTooltip(props) {
             </Grid>
           </Card.Meta>
           <Card.Description>
-          <Accordion defaultActiveIndex={0} panels={panels} />
+            <Accordion defaultActiveIndex={0} panels={panels} />
           </Card.Description>
           {image && <Card.Meta>Photo © {image.credit}</Card.Meta>}
         </Card.Content>
@@ -594,6 +596,86 @@ export function WikipediaTooltip(props) {
       </Card>
     </TooltipDiv>
   );
+}
+
+export class NDFDCurrentTooltip extends React.Component {
+  state = {
+    forecast: null,
+  };
+
+  // Get self hosted url from NDFD URL
+  // https://api.weather.gov/gridpoints/HNX/75,147/forecast"
+  _getSelfHostedURL = url => {
+    console.log(url);
+    const parsed = new URL(url);
+    const path = parsed.pathname;
+    const selfURL = `https://tiles.nst.guide/ndfd_current${path}.geojson`;
+    return selfURL;
+  };
+
+  componentWillMount = () => {
+    const { object } = this.props;
+    const forecast_url = object.properties.forecast_url;
+    if (!forecast_url) {
+      return;
+    }
+
+    const selfURL = this._getSelfHostedURL(forecast_url);
+    fetch(selfURL)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        this.setState({ forecast: data });
+      });
+  };
+
+  render() {
+    const { object, pointerX, pointerY, pinned = false, onCornerClick = null } =
+      this.props || {};
+    const { forecast } = this.state;
+    return (
+      <TooltipDiv x={pointerX} y={pointerY} width="280px" pinned={pinned}>
+        <Card>
+          {pinned && <TooltipPin onClick={onCornerClick} />}
+          {/* <Card.Content> */}
+          {forecast ? (
+            <Card.Content>
+              <Card.Header>Weather Forecast</Card.Header>
+              <Card.Meta>
+                Updated {humanReadableDate(forecast.properties.updated)}{' '}
+              </Card.Meta>
+            </Card.Content>
+          ) : (
+            <Card.Content>
+              <Dimmer active>
+                <Loader content="Loading" />
+              </Dimmer>
+            </Card.Content>
+          )}
+          {object && object.properties && object.properties.title && (
+            <Card.Header>
+              <a
+                href={object.properties.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {object.properties.title}
+              </a>
+            </Card.Header>
+          )}
+          {object && object.properties && object.properties.DateCurren && (
+            <Card.Meta>
+              <span className="date"></span>
+            </Card.Meta>
+          )}
+          {object && object.properties && object.properties.summary && (
+            <Card.Description>{object.properties.summary}</Card.Description>
+          )}
+          {/* </Card.Content> */}
+        </Card>
+      </TooltipDiv>
+    );
+  }
 }
 
 function humanReadableDate(dateStr) {
